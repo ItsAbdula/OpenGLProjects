@@ -7,3 +7,7 @@ Development Environment :
  GLAD  
  GLFW  
 
+References :  
+
+learnopengl.com  
+OpenGL 4 Shading Language Cookbook
