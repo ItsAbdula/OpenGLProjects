@@ -35,7 +35,11 @@ int main()
         return -1;
     }
 
-    FileSystem::loadModel("spot_triangulated.obj");
+    auto obj = FileSystem::loadModel("spot_triangulated.obj");
+    for (unsigned int i = 0; i < obj->mNumMeshes; i++)
+    {
+        cout << FileSystem::getVertexCount(obj->mMeshes[0]);
+    }
 
     auto vertexShaderSource = FileSystem::readShader("simpleShader.vert");
     auto vertexShader = Factory::MakeShader(GL_VERTEX_SHADER, &vertexShaderSource);

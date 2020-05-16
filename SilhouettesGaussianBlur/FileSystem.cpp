@@ -1,11 +1,10 @@
 #include <string>
 
-#include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
-
 #include "FileSystem.h"
 
 using namespace std;
+
+static Assimp::Importer importer;
 
 string FileSystem::readFile(const string &path)
 {
@@ -33,15 +32,21 @@ string FileSystem::readShader(const string &name)
     return readFile("../Shaders/" + name);
 }
 
-void FileSystem::loadModel(const string &name)
+const aiScene* FileSystem::loadModel(const string &name)
 {
     auto path = string("../Resources/Models/" + name);
 
-    Assimp::Importer importer;
     const aiScene* pScene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals |
         aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
 
     if (pScene == NULL) cerr << "Can't Load " + path << endl;
+
+    return pScene;
+}
+
+unsigned int FileSystem::getVertexCount(const aiMesh *mesh)
+{
+    return mesh->mNumVertices;
 }
 
 void FileSystem::writeFile(const string &path, const string &contents)
