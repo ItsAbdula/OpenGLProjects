@@ -140,12 +140,12 @@
     <ClCompile Include="Source1.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="simpleShader.frag" />
-    <None Include="simpleShader.vert" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="Shader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Shaders\simpleShader.frag" />
+    <None Include="..\Shaders\simpleShader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
