@@ -1,6 +1,6 @@
 # OpenGLProjects
 
-DevelopMent Environment :
+Development Environment :\
  
  Windows 10(64-bit)\
  Visual Studio 2017\
