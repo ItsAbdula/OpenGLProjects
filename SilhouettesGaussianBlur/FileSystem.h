@@ -11,6 +11,7 @@ class FileSystem
 {
 public:
     static string readFile(const string &path);
+    static string readShader(const string &name);
     static void writeFile(const string &path, const string &contents);
 
 private:

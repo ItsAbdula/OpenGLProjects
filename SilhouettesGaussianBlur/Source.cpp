@@ -35,10 +35,10 @@ int main()
         return -1;
     }
 
-    auto vertexShaderSource = FileSystem::readFile("simpleShader.vert");
+    auto vertexShaderSource = FileSystem::readShader("simpleShader.vert");
     auto vertexShader = Factory::MakeShader(GL_VERTEX_SHADER, &vertexShaderSource);
 
-    auto fragmentShaderSource = FileSystem::readFile("simpleShader.frag");
+    auto fragmentShaderSource = FileSystem::readShader("simpleShader.frag");
     auto fragmentShader = Factory::MakeShader(GL_FRAGMENT_SHADER, &fragmentShaderSource);
 
     std::vector<Shader> shaders;
@@ -48,10 +48,10 @@ int main()
     auto program = Factory::MakeProgram(shaders);
 
     float vertices[] = {
- 0.5f, 0.5f, 0.0f, // top right
- 0.5f, -0.5f, 0.0f, // bottom right
- -0.5f, -0.5f, 0.0f, // bottom left
- -0.5f, 0.5f, 0.0f // top left
+    0.5f, 0.5f, 0.0f, // top right
+    0.5f, -0.5f, 0.0f, // bottom right
+    -0.5f, -0.5f, 0.0f, // bottom left
+    -0.5f, 0.5f, 0.0f // top left
     };
     float colors[] = {
     1.0f, 0.0f, 0.0f, 1.0f,// top right
@@ -63,52 +63,26 @@ int main()
     0, 1, 3, // first triangle
     1, 2, 3 // second triangle
     };
-    unsigned int EBO;
+
+    unsigned int VBO, VAO, EBO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
+
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    unsigned int VBO[2], VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(2, VBO);
-    GLuint positionBufferHandle = VBO[0];
-    GLuint colorBufferHandle = VBO[1];
-
-    {
-        glBindVertexArray(VAO);
-
-        glBindBuffer(GL_ARRAY_BUFFER, positionBufferHandle);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
-
-        glBindBuffer(GL_ARRAY_BUFFER, colorBufferHandle);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
-
-        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(1);
-    }
-
-    //    unsigned int VBO, VAO, EBO;
-    //glGenVertexArrays(1, &VAO);
-    //glGenBuffers(1, &VBO);
-    //glGenBuffers(1, &EBO);
-
-    //glBindVertexArray(VAO);
-
-    //glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    //// position attribute
-    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    //glEnableVertexAttribArray(0);
-    //// color attribute
-    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    //glEnableVertexAttribArray(1);
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    // color attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glUseProgram(program->getID());
 
@@ -130,7 +104,7 @@ int main()
     }
 
     glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(2, VBO);
+    glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
 
     glfwTerminate();

@@ -4,32 +4,38 @@ using namespace std;
 
 string FileSystem::readFile(const string &path)
 {
-    ifstream inputStream;
+    string contents;
 
-    inputStream.open(path);
-    if (inputStream.is_open() == false)
+    ifstream fileStream(path);
+    if (fileStream.is_open() == false)
     {
         cerr << "Can't open : " << path << endl;
+
+        return contents;
     }
 
     stringstream buffer;
-    buffer << inputStream.rdbuf();
+    buffer << fileStream.rdbuf();
+    contents = buffer.str();
 
-    auto contents(buffer.str());
-
-    inputStream.close();
+    fileStream.close();
 
     return contents;
 }
 
+string FileSystem::readShader(const string &name)
+{
+    return readFile("../Shaders/" + name);
+}
+
 void FileSystem::writeFile(const string &path, const string &contents)
 {
-    ofstream outputStream;
-
-    outputStream.open(path);
+    ofstream outputStream(path);
     if (outputStream.is_open() == false)
     {
         cerr << "Can't open : " << path << endl;
+
+        return;
     }
 
     outputStream << contents << endl;
