@@ -1,3 +1,8 @@
+#include <string>
+
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
+
 #include "FileSystem.h"
 
 using namespace std;
@@ -26,6 +31,17 @@ string FileSystem::readFile(const string &path)
 string FileSystem::readShader(const string &name)
 {
     return readFile("../Shaders/" + name);
+}
+
+void FileSystem::loadModel(const string &name)
+{
+    auto path = string("../Resources/Models/" + name);
+
+    Assimp::Importer importer;
+    const aiScene* pScene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals |
+        aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
+
+    if (pScene == NULL) cerr << "Can't Load " + path << endl;
 }
 
 void FileSystem::writeFile(const string &path, const string &contents)

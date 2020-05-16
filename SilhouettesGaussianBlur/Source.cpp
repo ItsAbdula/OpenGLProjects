@@ -35,6 +35,8 @@ int main()
         return -1;
     }
 
+    FileSystem::loadModel("spot_triangulated.obj");
+
     auto vertexShaderSource = FileSystem::readShader("simpleShader.vert");
     auto vertexShader = Factory::MakeShader(GL_VERTEX_SHADER, &vertexShaderSource);
 
