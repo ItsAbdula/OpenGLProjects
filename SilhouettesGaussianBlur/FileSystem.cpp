@@ -32,11 +32,6 @@ string FileSystem::readShader(const string &name)
     return readFile("../Shaders/" + name);
 }
 
-unsigned int FileSystem::getVertexCount(const aiMesh *mesh)
-{
-    return mesh->mNumVertices;
-}
-
 void FileSystem::writeFile(const string &path, const string &contents)
 {
     ofstream outputStream(path);
