@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "FileSystem.h"
+#include "ResourceManager.h"
 #include "Shader.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
@@ -35,11 +36,7 @@ int main()
         return -1;
     }
 
-    auto obj = FileSystem::loadModel("spot_triangulated.obj");
-    for (unsigned int i = 0; i < obj->mNumMeshes; i++)
-    {
-        cout << FileSystem::getVertexCount(obj->mMeshes[0]);
-    }
+    auto obj = ResourceManager::getInstance().loadModel("spot_triangulated.obj");
 
     auto vertexShaderSource = FileSystem::readShader("simpleShader.vert");
     auto vertexShader = Factory::MakeShader(GL_VERTEX_SHADER, &vertexShaderSource);
