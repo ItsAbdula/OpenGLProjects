@@ -12,6 +12,9 @@ class Mesh
 public:
     Mesh(const aiScene* scene);
 
+    const GLuint countVertices();
+    const GLuint countFaces();
+
     const glm::vec3 *getVertex(GLuint vertexIndex);
     const std::vector<GLuint> *getFace(GLuint faceIndex);
     std::vector<const glm::vec3*> getFaceVertices(GLuint faceIndex);

@@ -8,6 +8,16 @@ Mesh::Mesh(const aiScene* _scene)
     faces = copyFaces(_scene);
 }
 
+const GLuint Mesh::countVertices()
+{
+    return vertices.size();
+}
+
+const GLuint Mesh::countFaces()
+{
+    return faces.size();
+}
+
 std::vector<glm::vec3> Mesh::copyVertices(const aiScene* pScene)
 {
     std::vector<glm::vec3> vertices;
