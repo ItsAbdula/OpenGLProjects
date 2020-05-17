@@ -137,6 +137,7 @@
     <ClCompile Include="..\include\glad\glad.c" />
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="OpenGLWrapper.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Transform.cpp" />
@@ -145,6 +146,8 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="OpenGLWrapper.h" />
+    <ClInclude Include="ShaderType.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Shader.h" />
