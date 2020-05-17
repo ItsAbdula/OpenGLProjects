@@ -136,10 +136,13 @@
   <ItemGroup>
     <ClCompile Include="..\include\glad\glad.c" />
     <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileSystem.h" />
+    <ClInclude Include="Singleton.h" />
+    <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
