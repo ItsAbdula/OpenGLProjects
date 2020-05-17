@@ -2,18 +2,22 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+
+#include <glad/glad.h>
+#include <glm/vec3.hpp>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
 #include "Singleton.h"
+#include "Mesh.h"
 
 class ResourceManager : public Singleton<ResourceManager>
 {
 public:
-    const aiScene* loadModel(const std::string &name);
-    void passaiscene(const aiScene* pScene);
+    Mesh *loadModel(const std::string &name);
 
 private:
 };

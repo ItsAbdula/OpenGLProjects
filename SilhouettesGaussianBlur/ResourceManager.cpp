@@ -1,6 +1,6 @@
 #include "ResourceManager.h"
 
-const aiScene* ResourceManager::loadModel(const std::string &name)
+Mesh *ResourceManager::loadModel(const std::string &name)
 {
     auto path = std::string("../Resources/Models/" + name);
 
@@ -10,26 +10,9 @@ const aiScene* ResourceManager::loadModel(const std::string &name)
     if (pScene == NULL)
     {
         std::cerr << importer.GetErrorString() << std::endl;
-
-        return pScene;
     }
 
-    passaiscene(pScene);
+    auto mesh = new Mesh(pScene);
 
-    return pScene;
-}
-
-void ResourceManager::passaiscene(const aiScene* pScene)
-{
-    if (pScene->HasMeshes())
-    {
-        for (unsigned int i = 0; i < pScene->mNumMeshes; i++)
-        {
-            auto mesh = pScene->mMeshes[i];
-            for (unsigned int j = 0; i < mesh->mNumVertices; j++)
-            {
-                auto vertex = mesh->mVertices[j];
-            }
-        }
-    }
+    return mesh;
 }
