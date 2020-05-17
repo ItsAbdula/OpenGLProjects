@@ -4,13 +4,30 @@
 
 #include "FileSystem.h"
 #include "ResourceManager.h"
+#include "Camera.h"
 #include "Shader.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void mouse_btn_callBack(GLFWwindow* window, int btn, int action, int mods);
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+
+// camera
+Camera camera(glm::vec3(0.0f, 0.0f, 50.0f));
+Camera projector(glm::vec3(0.0f, 0.0f, 50.0f));
+double lastX = SCR_WIDTH / 2.0f;
+double lastY = SCR_HEIGHT / 2.0f;
+double decalX = SCR_WIDTH / 2.0f;
+double decalY = SCR_HEIGHT / 2.0f;
+bool firstMouse = true;
+
+// timing
+double deltaTime = 0.0f;
+double lastFrame = 0.0f;
 
 int main()
 {
@@ -28,7 +45,14 @@ int main()
         return -1;
     }
     glfwMakeContextCurrent(window);
+
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    //glEnable(GL_DEPTH_TEST);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -93,16 +117,25 @@ int main()
 
     while (!glfwWindowShouldClose(window))
     {
+        double currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
         processInput(window);
         /*
         201421062 -> {201, 421, 062} -> {201, 164, 062} -> {0.785, 0.601, 0.242}
 
         */
         glClearColor(0.785f, 0.601f, 0.242f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+        {
+            glBindVertexArray(VAO);
+
+            glDrawArrays(GL_TRIANGLES, 0, obj->countVertices());
+
+            glBindVertexArray(0);
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -120,9 +153,63 @@ void processInput(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.ProcessKeyboard(FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.ProcessKeyboard(BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.ProcessKeyboard(LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.ProcessKeyboard(RIGHT, deltaTime);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+}
+
+void mouse_btn_callBack(GLFWwindow* window, int btn, int action, int mods)
+{
+    if (btn == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS)
+    {
+        glfwGetCursorPos(window, &lastX, &lastY);
+    }
+
+    if (btn == GLFW_MOUSE_BUTTON_2 && action == GLFW_PRESS)
+    {
+        glfwGetCursorPos(window, &decalX, &decalX);
+    }
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    // left click and drag: move camera
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1))
+    {
+        int width, height;
+        glfwGetWindowSize(window, &width, &height);
+        double xoffset = ((xpos - lastX) / (height) * 180);
+        double yoffset = ((lastY - ypos) / (width) * 180);
+        lastX = xpos;
+        lastY = ypos;
+        camera.ProcessMouseMovement(xoffset, yoffset);
+    }
+
+    // right click and drag: move projector image
+    else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2))
+    {
+        int width, height;
+        glfwGetWindowSize(window, &width, &height);
+        double xoffset = ((xpos - decalX) / (height) * 180);
+        double yoffset = ((decalY - ypos) / (width) * 180);
+        decalX = xpos;
+        decalY = ypos;
+        projector.ProcessMouseMovement(xoffset, yoffset);
+    }
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    camera.ProcessMouseScroll(yoffset);
 }
