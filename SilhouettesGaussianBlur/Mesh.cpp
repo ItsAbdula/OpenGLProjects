@@ -7,7 +7,7 @@ Mesh::Mesh(MeshData *_meshData)
 
     VAO = allocateVAO();
     {
-        allocateVBO(0, _meshData->getVertex[0]);
+        VBOs.push_back(allocateVBO(0, _meshData->getVertices()));
     }
 }
 
@@ -15,11 +15,12 @@ GLuint Mesh::get_vertex_count()
 {
     return nVertices;
 }
+
 GLuint Mesh::getVAO()
 {
     return VAO;
 }
-std::vector<GLuint> Mesh::getVBOs()
+const std::vector<GLuint> Mesh::getVBOs()
 {
     return VBOs;
 }
@@ -94,6 +95,19 @@ void drawMesh(Mesh &mesh)
     glBindVertexArray(0);
 }
 
+void deleteMesh(Mesh &mesh)
+{
+    auto VAO = mesh.getVAO();
+    auto VBOs = mesh.getVBOs();
+
+    glDeleteVertexArrays(1, &VAO);
+
+    if (mesh.getVBOs().size() != 0)
+    {
+        glDeleteBuffers(VBOs.size(), &(VBOs.at(0)));
+    }
+}
+
 MeshData::MeshData(const aiScene* _scene)
 {
     if (_scene == NULL) return;
@@ -153,12 +167,16 @@ std::vector<std::vector<GLuint>> MeshData::copyFaces(const aiScene* pScene)
 
     return faces;
 }
-const glm::vec3 *MeshData::getVertex(GLuint vertexIndex)
+std::vector<glm::vec3>* MeshData::getVertices()
+{
+    return &vertices;
+}
+glm::vec3 *MeshData::getVertex(GLuint vertexIndex)
 {
     return &(vertices.at(vertexIndex));
 }
 
-const std::vector<GLuint>* MeshData::getFace(GLuint faceIndex)
+std::vector<GLuint>* MeshData::getFace(GLuint faceIndex)
 {
     return &(faces.at(faceIndex));
 }

@@ -16,8 +16,9 @@ public:
     const GLuint countVertices();
     const GLuint countFaces();
 
-    const glm::vec3 *getVertex(GLuint vertexIndex);
-    const std::vector<GLuint> *getFace(GLuint faceIndex);
+    std::vector<glm::vec3> *getVertices();
+    glm::vec3 *getVertex(GLuint vertexIndex);
+    std::vector<GLuint> *getFace(GLuint faceIndex);
     std::vector<const glm::vec3*> getFaceVertices(GLuint faceIndex);
 
 private:
@@ -36,7 +37,7 @@ public:
 
     GLuint get_vertex_count();
     GLuint getVAO();
-    std::vector<GLuint> getVBOs();
+    const std::vector<GLuint> getVBOs();
 
 private:
     GLuint nVertices;
@@ -50,4 +51,6 @@ GLuint allocateVBO(const GLuint attribIndex, std::vector<glm::vec2> *VBO);
 GLuint *allocateVBOs(GLuint VAO, std::vector<std::vector<glm::vec3> *> &vertexInfoVec3, std::vector<std::vector<glm::vec2> *> &vertexInfoVec2);
 
 GLuint allocateVAO();
+
 void drawMesh(Mesh &mesh);
+void deleteMesh(Mesh &mesh);

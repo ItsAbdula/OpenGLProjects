@@ -60,7 +60,7 @@ int main()
         return -1;
     }
 
-    auto obj = ResourceManager::getInstance().loadModel("spot_triangulated.obj");
+    auto obj = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
 
     auto vertexShaderSource = FileSystem::readShader("simpleShader.vert");
     auto vertexShader = Factory::MakeShader(GL_VERTEX_SHADER, &vertexShaderSource);
@@ -73,47 +73,6 @@ int main()
     shaders.push_back(fragmentShader);
 
     auto program = Factory::MakeProgram(shaders);
-
-    float vertices[] = {
-    0.5f, 0.5f, 0.0f, // top right
-    0.5f, -0.5f, 0.0f, // bottom right
-    -0.5f, -0.5f, 0.0f, // bottom left
-    -0.5f, 0.5f, 0.0f // top left
-    };
-    float colors[] = {
-    1.0f, 0.0f, 0.0f, 1.0f,// top right
-    1.0f, 0.0f, 0.0f, 1.0f,// bottom right
-    0.0f, 0.0f, 1.0f, 1.0f,// bottom left
-    0.0f, 0.0f, 1.0f, 1.0f // top left
-    };
-    unsigned int indices[] = { // note that we start from 0!
-    0, 1, 3, // first triangle
-    1, 2, 3 // second triangle
-    };
-
-    unsigned int VBO, VAO, EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glBufferData(GL_ARRAY_BUFFER, obj->countVertices() * sizeof(glm::vec3), obj->getVertex(0), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, obj->countFaces() * sizeof(GLuint), obj->getFace(0), GL_STATIC_DRAW);
-
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glUseProgram(program->getID());
 
     auto cam_programID = build_program("Camera");
 
@@ -131,29 +90,18 @@ int main()
         glClearColor(0.785f, 0.601f, 0.242f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        {
-            glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 500.0f);
-            glm::mat4 view = camera.GetViewMatrix();
-            glm::mat4 model = camera.transform.get_model_matrix();
-
-            set_uniform_value(cam_programID, "projection", projection);
-            set_uniform_value(cam_programID, "view", view);
-            set_uniform_value(cam_programID, "model", model);
-        }
-
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, obj->countVertices());
+        glBindVertexArray(obj.getVAO());
+        glDrawArrays(GL_TRIANGLES, 0, obj.get_vertex_count());
         glBindVertexArray(0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
+    deleteMesh(obj);
 
     glfwTerminate();
+
     return 0;
 }
 
