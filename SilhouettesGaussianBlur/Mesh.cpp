@@ -20,7 +20,7 @@ GLuint Mesh::getVAO()
 {
     return VAO;
 }
-const std::vector<GLuint> Mesh::getVBOs()
+const vector<GLuint> Mesh::getVBOs()
 {
     return VBOs;
 }
@@ -33,7 +33,7 @@ GLuint allocateVAO()
     return VAO;
 }
 
-GLuint allocateVBO(const GLuint attribIndex, std::vector<glm::vec3> *VBO)
+GLuint allocateVBO(const GLuint attribIndex, vector<glm::vec3> *VBO)
 {
     GLuint VBOIndex = 0;
     glGenBuffers(1, &VBOIndex);
@@ -49,7 +49,7 @@ GLuint allocateVBO(const GLuint attribIndex, std::vector<glm::vec3> *VBO)
     return VBOIndex;
 }
 
-GLuint allocateVBO(const GLuint attribIndex, std::vector<glm::vec2> *VBO)
+GLuint allocateVBO(const GLuint attribIndex, vector<glm::vec2> *VBO)
 {
     GLuint VBOIndex = 0;
     glGenBuffers(1, &VBOIndex);
@@ -65,7 +65,7 @@ GLuint allocateVBO(const GLuint attribIndex, std::vector<glm::vec2> *VBO)
     return VBOIndex;
 }
 
-GLuint *allocateVBOs(GLuint VAO, std::vector<std::vector<glm::vec3> *> &vertexInfoVec3, std::vector<std::vector<glm::vec2> *> &vertexInfoVec2)
+GLuint *allocateVBOs(GLuint VAO, vector<vector<glm::vec3> *> &vertexInfoVec3, vector<vector<glm::vec2> *> &vertexInfoVec2)
 {
     GLuint *VBOindicies = new GLuint[vertexInfoVec3.size() + vertexInfoVec2.size()];
 
@@ -126,9 +126,9 @@ const GLuint MeshData::countFaces()
     return faces.size();
 }
 
-std::vector<glm::vec3> MeshData::copyVertices(const aiScene* pScene)
+vector<glm::vec3> MeshData::copyVertices(const aiScene* pScene)
 {
-    std::vector<glm::vec3> vertices;
+    vector<glm::vec3> vertices;
     if (pScene->HasMeshes() == false) return vertices;
 
     for (unsigned int i = 0; i < pScene->mNumMeshes; i++)
@@ -143,9 +143,9 @@ std::vector<glm::vec3> MeshData::copyVertices(const aiScene* pScene)
     return vertices;
 }
 
-std::vector<std::vector<GLuint>> MeshData::copyFaces(const aiScene* pScene)
+vector<vector<GLuint>> MeshData::copyFaces(const aiScene* pScene)
 {
-    std::vector<std::vector<GLuint>> faces;
+    vector<vector<GLuint>> faces;
     if (pScene->HasMeshes() == false) return faces;
 
     for (unsigned int i = 0; i < pScene->mNumMeshes; i++)
@@ -155,7 +155,7 @@ std::vector<std::vector<GLuint>> MeshData::copyFaces(const aiScene* pScene)
         {
             auto face = mesh->mFaces[j];
 
-            std::vector<GLuint> faceIndicies;
+            vector<GLuint> faceIndicies;
             for (unsigned int k = 0; k < face.mNumIndices; k++)
             {
                 faceIndicies.push_back(face.mIndices[k]);
@@ -167,7 +167,7 @@ std::vector<std::vector<GLuint>> MeshData::copyFaces(const aiScene* pScene)
 
     return faces;
 }
-std::vector<glm::vec3>* MeshData::getVertices()
+vector<glm::vec3>* MeshData::getVertices()
 {
     return &vertices;
 }
@@ -176,14 +176,14 @@ glm::vec3 *MeshData::getVertex(GLuint vertexIndex)
     return &(vertices.at(vertexIndex));
 }
 
-std::vector<GLuint>* MeshData::getFace(GLuint faceIndex)
+vector<GLuint>* MeshData::getFace(GLuint faceIndex)
 {
     return &(faces.at(faceIndex));
 }
 
-std::vector<const glm::vec3*> MeshData::getFaceVertices(GLuint faceIndex)
+vector<const glm::vec3*> MeshData::getFaceVertices(GLuint faceIndex)
 {
-    std::vector<const glm::vec3*> result;
+    vector<const glm::vec3*> result;
     for (auto vertexIndex : *getFace(faceIndex))
     {
         result.push_back(getVertex(vertexIndex));

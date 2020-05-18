@@ -8,6 +8,8 @@
 
 #include <assimp/scene.h>
 
+using std::vector;
+
 class MeshData
 {
 public:
@@ -16,17 +18,17 @@ public:
     const GLuint countVertices();
     const GLuint countFaces();
 
-    std::vector<glm::vec3> *getVertices();
+    vector<glm::vec3> *getVertices();
     glm::vec3 *getVertex(GLuint vertexIndex);
-    std::vector<GLuint> *getFace(GLuint faceIndex);
-    std::vector<const glm::vec3*> getFaceVertices(GLuint faceIndex);
+    vector<GLuint> *getFace(GLuint faceIndex);
+    vector<const glm::vec3*> getFaceVertices(GLuint faceIndex);
 
 private:
-    std::vector<glm::vec3> vertices;
-    std::vector<std::vector<GLuint>> faces;
+    vector<glm::vec3> vertices;
+    vector<vector<GLuint>> faces;
 
-    std::vector<glm::vec3> copyVertices(const aiScene* pScene);
-    std::vector<std::vector<GLuint>> copyFaces(const aiScene* pScene);
+    vector<glm::vec3> copyVertices(const aiScene* pScene);
+    vector<vector<GLuint>> copyFaces(const aiScene* pScene);
 };
 
 class Mesh
@@ -37,18 +39,18 @@ public:
 
     GLuint get_vertex_count();
     GLuint getVAO();
-    const std::vector<GLuint> getVBOs();
+    const vector<GLuint> getVBOs();
 
 private:
     GLuint nVertices;
     GLuint nFaces;
 
     GLuint VAO;
-    std::vector<GLuint> VBOs;
+    vector<GLuint> VBOs;
 };
-GLuint allocateVBO(const GLuint attribIndex, std::vector<glm::vec3> *VBO);
-GLuint allocateVBO(const GLuint attribIndex, std::vector<glm::vec2> *VBO);
-GLuint *allocateVBOs(GLuint VAO, std::vector<std::vector<glm::vec3> *> &vertexInfoVec3, std::vector<std::vector<glm::vec2> *> &vertexInfoVec2);
+GLuint allocateVBO(const GLuint attribIndex, vector<glm::vec3> *VBO);
+GLuint allocateVBO(const GLuint attribIndex, vector<glm::vec2> *VBO);
+GLuint *allocateVBOs(GLuint VAO, vector<vector<glm::vec3> *> &vertexInfoVec3, vector<vector<glm::vec2> *> &vertexInfoVec2);
 
 GLuint allocateVAO();
 
