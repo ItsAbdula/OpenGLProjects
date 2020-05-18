@@ -71,7 +71,7 @@ int main()
 
     auto program = Factory::MakeProgram(shaders);
 
-    auto cam_programID = build_program("Camera");
+    auto cam_programID = build_program("RenderedObject");
 
     while (!glfwWindowShouldClose(window))
     {
@@ -80,10 +80,7 @@ int main()
         lastFrame = currentFrame;
 
         processInput(window);
-        /*
-        201421062 -> {201, 421, 062} -> {201, 164, 062} -> {0.785, 0.601, 0.242}
 
-        */
         glClearColor(0.785f, 0.601f, 0.242f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -158,7 +155,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
         double yoffset = ((decalY - ypos) / (width) * 180);
         decalX = xpos;
         decalY = ypos;
-        projector.ProcessMouseMovement(xoffset, yoffset);
     }
 }
 
