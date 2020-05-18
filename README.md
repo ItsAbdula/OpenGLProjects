@@ -5,7 +5,7 @@
  Visual Studio 2017  
  OpenGL 4.x  
  GLAD    
- GLFW
+ GLFW  
  glm  
 
 **References :**  
