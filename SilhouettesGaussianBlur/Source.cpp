@@ -20,7 +20,7 @@ const unsigned int SCR_HEIGHT = 600;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 50.0f));
-Camera projector(glm::vec3(0.0f, 0.0f, 50.0f));
+
 double lastX = SCR_WIDTH / 2.0f;
 double lastY = SCR_HEIGHT / 2.0f;
 double decalX = SCR_WIDTH / 2.0f;
@@ -62,11 +62,8 @@ int main()
 
     auto obj = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
 
-    auto vertexShaderSource = FileSystem::readShader("simpleShader.vert");
-    auto vertexShader = Factory::MakeShader(GL_VERTEX_SHADER, &vertexShaderSource);
-
-    auto fragmentShaderSource = FileSystem::readShader("simpleShader.frag");
-    auto fragmentShader = Factory::MakeShader(GL_FRAGMENT_SHADER, &fragmentShaderSource);
+    auto vertexShader = Factory::MakeShader(GL_VERTEX_SHADER, &FileSystem::readShader("simpleShader.vert"));
+    auto fragmentShader = Factory::MakeShader(GL_FRAGMENT_SHADER, &FileSystem::readShader("simpleShader.frag"));
 
     std::vector<Shader> shaders;
     shaders.push_back(vertexShader);
