@@ -7,6 +7,8 @@
 #include "Camera.h"
 #include "Shader.h"
 
+#include "OpenGLWrapper.h"
+
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -51,8 +53,6 @@ int main()
     glfwSetScrollCallback(window, scroll_callback);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-    //glEnable(GL_DEPTH_TEST);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -115,6 +115,8 @@ int main()
 
     glUseProgram(program->getID());
 
+    auto cam_programID = build_program("Camera");
+
     while (!glfwWindowShouldClose(window))
     {
         double currentFrame = glfwGetTime();
@@ -130,12 +132,18 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         {
-            glBindVertexArray(VAO);
+            glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 500.0f);
+            glm::mat4 view = camera.GetViewMatrix();
+            glm::mat4 model = camera.transform.get_model_matrix();
 
-            glDrawArrays(GL_TRIANGLES, 0, obj->countVertices());
-
-            glBindVertexArray(0);
+            set_uniform_value(cam_programID, "projection", projection);
+            set_uniform_value(cam_programID, "view", view);
+            set_uniform_value(cam_programID, "model", model);
         }
+
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, obj->countVertices());
+        glBindVertexArray(0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

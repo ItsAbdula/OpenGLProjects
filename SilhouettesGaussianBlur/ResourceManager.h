@@ -17,7 +17,9 @@
 class ResourceManager : public Singleton<ResourceManager>
 {
 public:
-    Mesh *loadModel(const std::string &name);
+    MeshData *loadModel(const std::string &name);
+
+    Mesh *makeMesh(MeshData *meshData);
 
 private:
 };

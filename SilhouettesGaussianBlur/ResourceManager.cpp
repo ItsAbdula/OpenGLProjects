@@ -1,6 +1,6 @@
 #include "ResourceManager.h"
 
-Mesh *ResourceManager::loadModel(const std::string &name)
+MeshData *ResourceManager::loadModel(const std::string &name)
 {
     auto path = std::string("../Resources/Models/" + name);
 
@@ -12,7 +12,14 @@ Mesh *ResourceManager::loadModel(const std::string &name)
         std::cerr << importer.GetErrorString() << std::endl;
     }
 
-    auto mesh = new Mesh(pScene);
+    auto mesh = new MeshData(pScene);
+
+    return mesh;
+}
+
+Mesh *ResourceManager::makeMesh(MeshData *meshData)
+{
+    auto mesh = new Mesh(meshData);
 
     return mesh;
 }

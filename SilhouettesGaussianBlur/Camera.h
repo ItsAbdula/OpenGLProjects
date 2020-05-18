@@ -23,7 +23,6 @@ class Camera
 public:
     Transform transform;
 
-    glm::vec3 Position;
     glm::vec3 Front;
     glm::vec3 WorldUp;
 

@@ -9,28 +9,13 @@
 
 #include "Camera.h"
 #include "FileSystem.h"
+#include "Mesh.h"
 
 enum ImageType
 {
     REPEAT,
     CLAMP
 };
-
-class Mesh
-{
-private:
-    GLuint nVertex;
-    GLuint VAO;
-    GLuint *VBOs;
-
-public:
-    Mesh(GLuint _nVertex, GLuint _VAO, GLuint *_VBOs);
-
-    GLuint get_vertex_count();
-    GLuint get_VAO();
-    GLuint *get_VBOs();
-};
-void draw_mesh(Mesh &mesh);
 
 class Material
 {
@@ -49,7 +34,7 @@ public:
     GLuint get_specularMap();
 };
 
-class RenderObject
+class RenderedObject
 {
 private:
     GLuint id;
@@ -59,7 +44,7 @@ private:
     Material *material;
 
 public:
-    RenderObject(Mesh * _mesh);
+    RenderedObject(Mesh * _mesh);
 
     Transform *get_transform();
     Material *get_material();
@@ -71,7 +56,7 @@ public:
     void projective_render(Camera &camera, Camera &projector);
 };
 
-RenderObject *make_render_object(Mesh *mesh);
+RenderedObject *make_render_object(MeshData *mesh);
 
 GLint compile_shader(const GLint shaderType, const std::string *shaderSource);
 void compile_shaders(std::vector<GLint> *shaderIDs, const std::string *shaderSources);
@@ -88,6 +73,6 @@ void set_uniform_value(GLuint &prog, const char *name, glm::ivec4 &value);
 
 void set_uniform_value(GLuint &prog, const char *name, glm::mat4 &value);
 
-GLuint allocate_VBO(const GLuint attribIndex, std::vector<glm::vec3> *VBO);
-GLuint *allocate_VBOs(GLuint VAO, std::vector<std::vector<glm::vec3> *> &vertexInfo);
+GLuint allocateVBO(const GLuint attribIndex, std::vector<glm::vec3> *VBO);
+GLuint *allocateVBOs(GLuint VAO, std::vector<std::vector<glm::vec3> *> &vertexInfo);
 GLuint allocate_VAO();

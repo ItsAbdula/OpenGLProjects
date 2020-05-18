@@ -8,35 +8,6 @@ const unsigned int _SCR_HEIGHT = 600;
 // lighting
 glm::vec3 _lightPos(1.2f, 20.0f, 2.0f);
 
-Mesh::Mesh(GLuint _nVertex, GLuint _VAO, GLuint *_VBOs)
-{
-    nVertex = _nVertex;
-    VAO = _VAO;
-    VBOs = _VBOs;
-}
-
-GLuint Mesh::get_vertex_count()
-{
-    return nVertex;
-}
-GLuint Mesh::get_VAO()
-{
-    return VAO;
-}
-GLuint *Mesh::get_VBOs()
-{
-    return VBOs;
-}
-
-void draw_mesh(Mesh &mesh)
-{
-    glBindVertexArray(mesh.get_VAO());
-
-    glDrawArrays(GL_TRIANGLES, 0, mesh.get_vertex_count());
-
-    glBindVertexArray(0);
-}
-
 Material::Material(GLuint _prog, GLuint _diffuseMap, GLuint _specularMap)
 {
     prog = _prog;
@@ -58,39 +29,41 @@ GLuint Material::get_specularMap()
     return specularMap;
 }
 
-RenderObject::RenderObject(Mesh * _mesh)
+RenderedObject::RenderedObject(Mesh * _mesh)
 {
     transform = Transform();
     mesh = _mesh;
 }
 
-Material *RenderObject::get_material()
+Material *RenderedObject::get_material()
 {
     return material;
 }
 
-GLuint RenderObject::get_vertex_count()
+GLuint RenderedObject::get_vertex_count()
 {
     return mesh->get_vertex_count();
 }
 
-Transform *RenderObject::get_transform()
+Transform *RenderedObject::get_transform()
 {
     return &transform;
 }
 
-void RenderObject::set_material(Material *_material)
+void RenderedObject::set_material(Material *_material)
 {
     material = _material;
 }
 
-void RenderObject::render(Camera &camera)
+void RenderedObject::render(Camera &camera)
 {
     auto prog = material->get_program();
     glUseProgram(prog);
 
+    auto viewPos = camera.transform.get_translate();
+
     set_uniform_value(prog, "light.position", _lightPos);
-    set_uniform_value(prog, "viewPos", camera.Position);
+    set_uniform_value(prog, "viewPos", viewPos);
 
     glm::vec3 ambient = { 0.2f, 0.2f, 0.2f };
     glm::vec3 diffuse = { 0.5f, 0.5f, 0.5f };
@@ -119,12 +92,12 @@ void RenderObject::render(Camera &camera)
         glBindTexture(GL_TEXTURE_2D, material->get_specularMap());
     }
 
-    draw_mesh(*mesh);
+    drawMesh(*mesh);
 
     glUseProgram(0);
 }
 
-void RenderObject::projective_render(Camera &camera, Camera &projector)
+void RenderedObject::projective_render(Camera &camera, Camera &projector)
 {
     glm::mat4 bias = { 0.5f, 0.0f, 0.0f, 0.5f,
                             0.0f, 0.5f, 0.0f, 0.5f,
@@ -137,8 +110,10 @@ void RenderObject::projective_render(Camera &camera, Camera &projector)
     auto prog = material->get_program();
     glUseProgram(prog);
 
+    auto viewPos = camera.transform.get_translate();
+
     set_uniform_value(prog, "light.position", _lightPos);
-    set_uniform_value(prog, "viewPos", camera.Position);
+    set_uniform_value(prog, "viewPos", viewPos);
 
     glm::vec3 a = { 0.2f, 0.2f, 0.2f };
     glm::vec3 d = { 0.5f, 0.5f, 0.5f };
@@ -179,14 +154,14 @@ void RenderObject::projective_render(Camera &camera, Camera &projector)
         glBindTexture(GL_TEXTURE_2D, material->get_specularMap());
     }
 
-    draw_mesh(*mesh);
+    drawMesh(*mesh);
 
     glUseProgram(0);
 }
 
-RenderObject *make_render_object(Mesh *mesh)
+RenderedObject *make_render_object(Mesh *mesh)
 {
-    RenderObject *ro = new RenderObject(mesh);
+    RenderedObject *ro = new RenderedObject(mesh);
 
     return ro;
 }
@@ -194,8 +169,8 @@ RenderObject *make_render_object(Mesh *mesh)
 GLuint build_program(const std::string name)
 {
     std::string shaderSources[5];
-    shaderSources[0] = FileSystem::readFile("../Shaders/" + name + "/" + name + ".vert");
-    shaderSources[1] = FileSystem::readFile("../Shaders/" + name + "/" + name + ".frag");
+    shaderSources[0] = FileSystem::readShader("../Shaders/" + name + ".vert");
+    shaderSources[1] = FileSystem::readShader("../Shaders/" + name + ".frag");
 
     std::vector<GLint> shaderIDs;
     compile_shaders(&shaderIDs, shaderSources);
@@ -316,67 +291,4 @@ void set_uniform_value(GLuint &prog, const char *name, glm::mat4 &value)
 {
     auto uniform = glGetUniformLocation(prog, name);
     glUniformMatrix4fv(uniform, 1, GL_FALSE, &value[0][0]);
-}
-
-GLuint allocate_VBO(const GLuint attribIndex, std::vector<glm::vec3> *VBO)
-{
-    GLuint VBOIndex = 0;
-
-    glGenBuffers(1, &VBOIndex);
-    glBindBuffer(GL_ARRAY_BUFFER, VBOIndex);
-    glBufferData(GL_ARRAY_BUFFER, VBO->size() * sizeof(glm::vec3), &(VBO->front()), GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(attribIndex);
-    glVertexAttribPointer(attribIndex, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    return VBOIndex;
-}
-
-GLuint allocate_VBO(const GLuint attribIndex, std::vector<glm::vec2> *VBO)
-{
-    GLuint VBOIndex = 0;
-
-    glGenBuffers(1, &VBOIndex);
-    glBindBuffer(GL_ARRAY_BUFFER, VBOIndex);
-    glBufferData(GL_ARRAY_BUFFER, VBO->size() * sizeof(glm::vec2), &(VBO->front()), GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(attribIndex);
-    glVertexAttribPointer(attribIndex, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    return VBOIndex;
-}
-
-GLuint *allocate_VBOs(GLuint VAO, std::vector<std::vector<glm::vec3> *> &vertexInfoVec3, std::vector<std::vector<glm::vec2> *> &vertexInfoVec2)
-{
-    auto size = vertexInfoVec3.size() + vertexInfoVec2.size();
-    GLuint *VBOindicies = new GLuint[size];
-
-    glBindVertexArray(VAO);
-
-    GLuint i = 0;
-    for (i = 0; i < vertexInfoVec3.size(); i++)
-    {
-        VBOindicies[i] = allocate_VBO(i, vertexInfoVec3.at(i));
-    }
-    for (i = vertexInfoVec3.size(); i < size; i++)
-    {
-        VBOindicies[i] = allocate_VBO(i, vertexInfoVec2.at(i - vertexInfoVec3.size()));
-    }
-
-    glBindVertexArray(0);
-
-    return VBOindicies;
-}
-
-GLuint allocate_VAO()
-{
-    GLuint VAO = 0;
-
-    glGenVertexArrays(1, &VAO);
-
-    return VAO;
 }
