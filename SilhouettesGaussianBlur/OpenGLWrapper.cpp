@@ -8,27 +8,6 @@ const unsigned int _SCR_HEIGHT = 600;
 // lighting
 glm::vec3 _lightPos(1.2f, 20.0f, 2.0f);
 
-Material::Material(GLuint _prog, GLuint _diffuseMap, GLuint _specularMap)
-{
-    prog = _prog;
-
-    diffuseMap = _diffuseMap;
-    specularMap = _specularMap;
-}
-
-GLuint Material::get_program()
-{
-    return prog;
-}
-GLuint Material::get_diffuseMap()
-{
-    return diffuseMap;
-}
-GLuint Material::get_specularMap()
-{
-    return specularMap;
-}
-
 RenderObject::RenderObject(Mesh * _mesh)
 {
     transform = Transform();
@@ -216,27 +195,6 @@ GLint compile_shader(const GLint shaderType, const std::string *shaderSource)
     }
 
     return shaderID;
-}
-
-GLint link_program(const GLint *shaderIDs)
-{
-    auto programID = glCreateProgram();
-    glAttachShader(programID, shaderIDs[0]);
-    glAttachShader(programID, shaderIDs[1]);
-    glLinkProgram(programID);
-
-    GLint success;
-    glGetProgramiv(programID, GL_LINK_STATUS, &success);
-    if (!success)
-    {
-        GLchar infoLog[512];
-        std::cerr << infoLog << "PROGRAM::LINK_FAILED" << std::endl;
-    }
-
-    glDeleteShader(shaderIDs[0]);
-    glDeleteShader(shaderIDs[1]);
-
-    return programID;
 }
 
 void set_uniform_value(GLuint &prog, const char *name, glm::vec1 value)
