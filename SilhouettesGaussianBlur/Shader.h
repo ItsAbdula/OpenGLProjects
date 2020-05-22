@@ -6,8 +6,6 @@
 
 #include "FileSystem.h"
 
-#define MAX_SHADER_TYPES 5
-
 class Shader
 {
 public:
@@ -68,15 +66,6 @@ public:
     static Program *MakeProgram(std::vector<Shader> &shaders)
     {
         auto program = new Program(glCreateProgram());
-
-        //for (auto i = 0; i < MAX_SHADER_TYPES; i++)
-        //{
-        //    if (shaderPaths[i].empty) continue;
-
-        //    const auto shaderSource = FileSystem::readFile(shaderPaths[i]);
-
-        //    auto shader = MakeShader(GL_VERTEX_SHADER, &shaderSource);
-        //}
 
         for (const auto &s : shaders)
         {
