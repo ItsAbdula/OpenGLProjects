@@ -159,13 +159,6 @@ void RenderObject::projective_render(Camera &camera, Camera &projector)
     glUseProgram(0);
 }
 
-RenderObject *make_render_object(Mesh *mesh)
-{
-    RenderObject *ro = new RenderObject(mesh);
-
-    return ro;
-}
-
 GLuint build_program(const std::string name)
 {
     std::string shaderSources[5];

@@ -13,50 +13,48 @@
 
 enum ImageType
 {
-	REPEAT,
-	CLAMP
+    REPEAT,
+    CLAMP
 };
 
 class Material
 {
 private:
-	GLuint prog;
+    GLuint prog;
 
-	GLuint diffuseMap;
-	GLuint specularMap;
+    GLuint diffuseMap;
+    GLuint specularMap;
 
 public:
-	Material(GLuint _prog, GLuint _diffuseMap, GLuint _specularMap);
+    Material(GLuint _prog, GLuint _diffuseMap, GLuint _specularMap);
 
-	GLuint get_program();
+    GLuint get_program();
 
-	GLuint get_diffuseMap();
-	GLuint get_specularMap();
+    GLuint get_diffuseMap();
+    GLuint get_specularMap();
 };
 
 class RenderObject
 {
 private:
-	GLuint id;
+    GLuint id;
 
-	Transform transform;
-	Mesh *mesh;
-	Material *material;
+    Transform transform;
+    Mesh *mesh;
+    Material *material;
 
 public:
-	RenderObject(Mesh * _mesh);
+    RenderObject(Mesh * _mesh);
 
-	Transform *get_transform();
-	Material *get_material();
-	GLuint get_vertex_count();
+    Transform *get_transform();
+    Material *get_material();
+    GLuint get_vertex_count();
 
-	void set_material(Material *_material);
+    void set_material(Material *_material);
 
-	void render(Camera &camera);
-	void projective_render(Camera &camera, Camera &projector);
+    void render(Camera &camera);
+    void projective_render(Camera &camera, Camera &projector);
 };
-
-RenderObject *make_render_object(MeshData *mesh);
 
 GLint compile_shader(const GLint shaderType, const std::string *shaderSource);
 void compile_shaders(std::vector<GLint> *shaderIDs, const std::string *shaderSources);
