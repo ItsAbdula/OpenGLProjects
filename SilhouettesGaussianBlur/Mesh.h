@@ -17,6 +17,7 @@ public:
 
     const GLuint countVertices();
     const GLuint countFaces();
+    const GLuint countIndices();
 
     vector<glm::vec3> *getVertices();
     vector<GLuint>& getIndices();
@@ -41,6 +42,7 @@ public:
     Mesh(MeshData *_meshData);
 
     const GLuint get_vertex_count();
+    const GLuint get_index_count();
     const GLuint getVAO();
     const vector<GLuint> getVBOs();
     const GLuint getEBO();
@@ -48,6 +50,7 @@ public:
 private:
     GLuint nVertices;
     GLuint nFaces;
+    GLuint nIndices;
 
     GLuint VAO;
     vector<GLuint> VBOs;

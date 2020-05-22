@@ -4,6 +4,7 @@ Mesh::Mesh(MeshData *_meshData)
 {
     nVertices = _meshData->countVertices();
     nFaces = _meshData->countFaces();
+    nIndices = _meshData->countIndices();
 
     VAO = allocateVAO();
     {
@@ -15,6 +16,11 @@ Mesh::Mesh(MeshData *_meshData)
 const GLuint Mesh::get_vertex_count()
 {
     return nVertices;
+}
+
+const GLuint Mesh::get_index_count()
+{
+    return nIndices;
 }
 
 const GLuint Mesh::getVAO()
@@ -145,6 +151,11 @@ const GLuint MeshData::countVertices()
 const GLuint MeshData::countFaces()
 {
     return faces.size();
+}
+
+const GLuint MeshData::countIndices()
+{
+    return indices.size();
 }
 
 vector<glm::vec3> MeshData::copyVertices(const aiScene* pScene)
