@@ -73,10 +73,10 @@
     <None Include="..\Shaders\simpleShader.vert">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\Shaders\RenderedObject.vert">
+    <None Include="..\Shaders\RenderObject.vert">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\Shaders\RenderedObject.frag">
+    <None Include="..\Shaders\RenderObject.frag">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

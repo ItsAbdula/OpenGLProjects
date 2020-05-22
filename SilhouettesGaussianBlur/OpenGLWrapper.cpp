@@ -29,33 +29,33 @@ GLuint Material::get_specularMap()
     return specularMap;
 }
 
-RenderedObject::RenderedObject(Mesh * _mesh)
+RenderObject::RenderObject(Mesh * _mesh)
 {
     transform = Transform();
     mesh = _mesh;
 }
 
-Material *RenderedObject::get_material()
+Material *RenderObject::get_material()
 {
     return material;
 }
 
-GLuint RenderedObject::get_vertex_count()
+GLuint RenderObject::get_vertex_count()
 {
     return mesh->get_vertex_count();
 }
 
-Transform *RenderedObject::get_transform()
+Transform *RenderObject::get_transform()
 {
     return &transform;
 }
 
-void RenderedObject::set_material(Material *_material)
+void RenderObject::set_material(Material *_material)
 {
     material = _material;
 }
 
-void RenderedObject::render(Camera &camera)
+void RenderObject::render(Camera &camera)
 {
     auto prog = material->get_program();
     glUseProgram(prog);
@@ -97,7 +97,7 @@ void RenderedObject::render(Camera &camera)
     glUseProgram(0);
 }
 
-void RenderedObject::projective_render(Camera &camera, Camera &projector)
+void RenderObject::projective_render(Camera &camera, Camera &projector)
 {
     glm::mat4 bias = { 0.5f, 0.0f, 0.0f, 0.5f,
                             0.0f, 0.5f, 0.0f, 0.5f,
@@ -159,9 +159,9 @@ void RenderedObject::projective_render(Camera &camera, Camera &projector)
     glUseProgram(0);
 }
 
-RenderedObject *make_render_object(Mesh *mesh)
+RenderObject *make_render_object(Mesh *mesh)
 {
-    RenderedObject *ro = new RenderedObject(mesh);
+    RenderObject *ro = new RenderObject(mesh);
 
     return ro;
 }
