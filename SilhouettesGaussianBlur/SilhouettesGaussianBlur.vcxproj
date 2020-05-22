@@ -154,8 +154,8 @@
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Shaders\Camera.frag" />
-    <None Include="..\Shaders\Camera.vert" />
+    <None Include="..\Shaders\RenderedObject.vert" />
+    <None Include="..\Shaders\RenderedObject.frag" />
     <None Include="..\Shaders\simpleShader.frag" />
     <None Include="..\Shaders\simpleShader.vert" />
   </ItemGroup>
