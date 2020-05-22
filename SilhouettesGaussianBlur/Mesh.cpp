@@ -9,20 +9,27 @@ Mesh::Mesh(MeshData *_meshData)
     {
         VBOs.push_back(allocateVBO(0, _meshData->getVertices()));
     }
+    EBO = allocateEBO(_meshData->getIndices());
 }
 
-GLuint Mesh::get_vertex_count()
+const GLuint Mesh::get_vertex_count()
 {
     return nVertices;
 }
 
-GLuint Mesh::getVAO()
+const GLuint Mesh::getVAO()
 {
     return VAO;
 }
+
 const vector<GLuint> Mesh::getVBOs()
 {
     return VBOs;
+}
+
+const GLuint Mesh::getEBO()
+{
+    return EBO;
 }
 
 GLuint allocateVAO()
@@ -31,6 +38,17 @@ GLuint allocateVAO()
     glGenVertexArrays(1, &VAO);
 
     return VAO;
+}
+
+GLuint allocateEBO(vector<GLuint> indices)
+{
+    GLuint EBO = 0;
+    glGenBuffers(1, &EBO);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
+
+    return EBO;
 }
 
 GLuint allocateVBO(const GLuint attribIndex, vector<glm::vec3> *VBO)
@@ -99,6 +117,7 @@ void deleteMesh(Mesh &mesh)
 {
     auto VAO = mesh.getVAO();
     auto VBOs = mesh.getVBOs();
+    auto EBO = mesh.getEBO();
 
     glDeleteVertexArrays(1, &VAO);
 
@@ -106,6 +125,7 @@ void deleteMesh(Mesh &mesh)
     {
         glDeleteBuffers(VBOs.size(), &(VBOs.at(0)));
     }
+    glDeleteBuffers(1, &EBO);
 }
 
 MeshData::MeshData(const aiScene* _scene)
@@ -114,6 +134,7 @@ MeshData::MeshData(const aiScene* _scene)
 
     vertices = copyVertices(_scene);
     faces = copyFaces(_scene);
+    indices = copyIndices(_scene);
 }
 
 const GLuint MeshData::countVertices()
@@ -167,13 +188,41 @@ vector<vector<GLuint>> MeshData::copyFaces(const aiScene* pScene)
 
     return faces;
 }
+
+vector<GLuint> MeshData::copyIndices(const aiScene* pScene)
+{
+    vector<GLuint> indices;
+    if (pScene->HasMeshes() == false) return indices;
+
+    for (unsigned int i = 0; i < pScene->mNumMeshes; i++)
+    {
+        auto mesh = pScene->mMeshes[i];
+        for (unsigned int j = 0; j < mesh->mNumFaces; j++)
+        {
+            auto face = mesh->mFaces[j];
+            for (unsigned int k = 0; k < face.mNumIndices; k++)
+            {
+                indices.push_back(face.mIndices[k]);
+            }
+        }
+    }
+
+    return indices;
+}
+
 vector<glm::vec3>* MeshData::getVertices()
 {
     return &vertices;
 }
+
 glm::vec3 *MeshData::getVertex(GLuint vertexIndex)
 {
     return &(vertices.at(vertexIndex));
+}
+
+vector<GLuint>& MeshData::getIndices()
+{
+    return indices;
 }
 
 vector<GLuint>* MeshData::getFace(GLuint faceIndex)
