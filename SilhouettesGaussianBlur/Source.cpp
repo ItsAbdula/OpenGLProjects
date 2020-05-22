@@ -19,7 +19,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 50.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
 
 double lastX = SCR_WIDTH / 2.0f;
 double lastY = SCR_HEIGHT / 2.0f;
@@ -60,20 +60,15 @@ int main()
         return -1;
     }
 
+    auto black = ResourceManager::getInstance().loadImage("black.png", ImageType::REPEAT);
+
     auto cow = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
     auto cube = Mesh(ResourceManager::getInstance().loadModel("cube.obj"));
     auto plane = Mesh(ResourceManager::getInstance().loadModel("plane.obj"));
     auto sphere = Mesh(ResourceManager::getInstance().loadModel("sphere.obj"));
     auto teapot = Mesh(ResourceManager::getInstance().loadModel("teapot.obj"));
 
-    auto vertexShader = Factory::MakeShader(GL_VERTEX_SHADER, &FileSystem::readShader("simpleShader.vert"));
-    auto fragmentShader = Factory::MakeShader(GL_FRAGMENT_SHADER, &FileSystem::readShader("simpleShader.frag"));
-
-    std::vector<Shader> shaders;
-    shaders.push_back(vertexShader);
-    shaders.push_back(fragmentShader);
-
-    auto program = Factory::MakeProgram(shaders);
+    auto cowRender = RenderObject(&cow);
 
     auto renderObject = build_program("RenderObject");
 
@@ -89,6 +84,16 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         {
+            glUseProgram(renderObject);
+
+            glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 500.0f);
+            glm::mat4 view = camera.GetViewMatrix();
+            glm::mat4 model = cowRender.get_transform()->get_model_matrix();
+
+            set_uniform_value(renderObject, "projection", projection);
+            set_uniform_value(renderObject, "view", view);
+            set_uniform_value(renderObject, "model", model);
+
             glBindVertexArray(cow.getVAO());
             //glDrawArrays(GL_TRIANGLES, 0, cow.get_vertex_count());
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cow.getEBO());
@@ -97,6 +102,8 @@ int main()
 
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
+
+            glUseProgram(0);
         }
 
         glfwSwapBuffers(window);

@@ -11,12 +11,6 @@
 #include "FileSystem.h"
 #include "Mesh.h"
 
-enum ImageType
-{
-    REPEAT,
-    CLAMP
-};
-
 class Material
 {
 private:

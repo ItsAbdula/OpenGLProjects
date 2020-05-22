@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClCompile Include="..\include\glad\glad.c" />
     <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="Image.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="OpenGLWrapper.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
@@ -145,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="FileSystem.h" />
+    <ClInclude Include="Image.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="OpenGLWrapper.h" />
     <ClInclude Include="ShaderType.h" />
