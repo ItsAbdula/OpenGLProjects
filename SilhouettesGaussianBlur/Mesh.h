@@ -38,7 +38,6 @@ private:
 class Mesh
 {
 public:
-    //Mesh(GLuint _nVertex, GLuint _VAO, GLuint *_VBOs);
     Mesh(MeshData *_meshData);
 
     const GLuint get_vertex_count();

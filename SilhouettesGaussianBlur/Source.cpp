@@ -19,7 +19,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 50.0f));
 
 double lastX = SCR_WIDTH / 2.0f;
 double lastY = SCR_HEIGHT / 2.0f;
@@ -61,6 +61,10 @@ int main()
     }
 
     auto black = ResourceManager::getInstance().loadImage("black.png", ImageType::REPEAT);
+    auto magenta = ResourceManager::getInstance().loadImage("magenta.png", ImageType::REPEAT);
+    auto orange = ResourceManager::getInstance().loadImage("orange.png", ImageType::REPEAT);
+    auto white = ResourceManager::getInstance().loadImage("white.png", ImageType::REPEAT);
+    auto transparent = ResourceManager::getInstance().loadImage("transparent.png", ImageType::REPEAT);
 
     auto cow = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
     auto cube = Mesh(ResourceManager::getInstance().loadModel("cube.obj"));
@@ -68,9 +72,23 @@ int main()
     auto sphere = Mesh(ResourceManager::getInstance().loadModel("sphere.obj"));
     auto teapot = Mesh(ResourceManager::getInstance().loadModel("teapot.obj"));
 
-    auto cowRender = RenderObject(&cow);
-
     auto renderObject = build_program("RenderObject");
+    auto lighting = build_program("Lighting_Specular");
+    auto lamp = build_program("Lighting_Lamp");
+    auto lightmap = build_program("Lighting_Maps");
+    auto textureProgram = build_program("Texture");
+
+    auto defaultMaterial = new Material(lightmap, orange, transparent);
+
+    auto renderCow = RenderObject(&cow);
+    {
+        auto transform = renderCow.get_transform();
+        //transform->set_translate(glm::vec3(0.0f, -10.0f, -40.0f));
+        //transform->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
+    }
+    {
+        renderCow.set_material(defaultMaterial);
+    }
 
     while (!glfwWindowShouldClose(window))
     {
@@ -80,37 +98,18 @@ int main()
 
         processInput(window);
 
-        glClearColor(0.785f, 0.601f, 0.242f, 1.0f);
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         {
-            glUseProgram(renderObject);
-
-            glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 500.0f);
-            glm::mat4 view = camera.GetViewMatrix();
-            glm::mat4 model = cowRender.get_transform()->get_model_matrix();
-
-            set_uniform_value(renderObject, "projection", projection);
-            set_uniform_value(renderObject, "view", view);
-            set_uniform_value(renderObject, "model", model);
-
-            glBindVertexArray(cow.getVAO());
-            //glDrawArrays(GL_TRIANGLES, 0, cow.get_vertex_count());
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cow.getEBO());
-
-            glDrawElements(GL_TRIANGLES, cow.get_index_count(), GL_UNSIGNED_INT, (void*)0);
-
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-            glBindVertexArray(0);
-
-            glUseProgram(0);
+            renderCow.render(camera);
         }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    deleteMesh(cow);
+    deleteMesh(cow); // VRAM(GPU)
 
     glfwTerminate();
 

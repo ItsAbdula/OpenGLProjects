@@ -8,9 +8,17 @@ Mesh::Mesh(MeshData *_meshData)
 
     VAO = allocateVAO();
     {
+        glBindVertexArray(VAO);
         VBOs.push_back(allocateVBO(0, _meshData->getVertices()));
+        glBindVertexArray(0);
     }
+
+    glBindVertexArray(VAO);
     EBO = allocateEBO(_meshData->getIndices());
+    glBindVertexArray(0);
+
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 const GLuint Mesh::get_vertex_count()
@@ -57,64 +65,31 @@ GLuint allocateEBO(vector<GLuint> indices)
     return EBO;
 }
 
-GLuint allocateVBO(const GLuint attribIndex, vector<glm::vec3> *VBO)
+GLuint allocateVBO(const GLuint attribIndex, vector<glm::vec3> *vertexData)
 {
     GLuint VBOIndex = 0;
     glGenBuffers(1, &VBOIndex);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBOIndex);
-    glBufferData(GL_ARRAY_BUFFER, VBO->size() * sizeof(glm::vec3), &(VBO->front()), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertexData->size() * sizeof(glm::vec3), &(vertexData->front()), GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(attribIndex);
     glVertexAttribPointer(attribIndex, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, GL_ZERO);
-
-    return VBOIndex;
-}
-
-GLuint allocateVBO(const GLuint attribIndex, vector<glm::vec2> *VBO)
-{
-    GLuint VBOIndex = 0;
-    glGenBuffers(1, &VBOIndex);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBOIndex);
-    glBufferData(GL_ARRAY_BUFFER, VBO->size() * sizeof(glm::vec2), &(VBO->front()), GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(attribIndex);
-    glVertexAttribPointer(attribIndex, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    return VBOIndex;
-}
-
-GLuint *allocateVBOs(GLuint VAO, vector<vector<glm::vec3> *> &vertexInfoVec3, vector<vector<glm::vec2> *> &vertexInfoVec2)
-{
-    GLuint *VBOindicies = new GLuint[vertexInfoVec3.size() + vertexInfoVec2.size()];
-
-    glBindVertexArray(VAO);
-
-    GLuint i = 0;
-    for (i = 0; i < vertexInfoVec3.size(); i++)
-    {
-        VBOindicies[i] = allocateVBO(i, vertexInfoVec3.at(i));
-    }
-    for (i = 0; i < vertexInfoVec2.size(); i++)
-    {
-        VBOindicies[i] = allocateVBO(i, vertexInfoVec2.at(i));
-    }
 
     glBindVertexArray(0);
 
-    return VBOindicies;
+    return VBOIndex;
 }
 
 void drawMesh(Mesh &mesh)
 {
     glBindVertexArray(mesh.getVAO());
 
-    glDrawArrays(GL_TRIANGLES, 0, mesh.get_vertex_count());
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getEBO());
+    glDrawElements(GL_TRIANGLES, mesh.get_index_count(), GL_UNSIGNED_INT, (void*)0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     glBindVertexArray(0);
 }
