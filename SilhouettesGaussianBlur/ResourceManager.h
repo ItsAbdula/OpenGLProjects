@@ -22,7 +22,6 @@ public:
     Image * makeImage(std::string fileName, int * width, int * height, int * nrChannels);
     void unloadImage(Image * img);
     GLuint loadImage(const std::string fileName, const ImageType type);
-    Mesh *makeMesh(MeshData *meshData);
 
 private:
 };

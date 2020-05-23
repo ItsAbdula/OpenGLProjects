@@ -84,10 +84,3 @@ GLuint ResourceManager::loadImage(const std::string fileName, const ImageType ty
 
     return textureID;
 }
-
-Mesh *ResourceManager::makeMesh(MeshData *meshData)
-{
-    auto mesh = new Mesh(meshData);
-
-    return mesh;
-}
