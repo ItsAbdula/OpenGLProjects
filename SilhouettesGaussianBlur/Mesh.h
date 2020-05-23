@@ -57,7 +57,10 @@ private:
 class Mesh
 {
 public:
-    Mesh(MeshData *_meshData);
+    Mesh();
+    Mesh(MeshData* _meshData);
+
+    void Init(MeshData& _meshData);
 
     const GLuint get_vertex_count();
     const GLuint get_index_count();
@@ -66,6 +69,8 @@ public:
     const GLuint getEBO();
 
 private:
+    bool isInit = false;
+
     GLuint nVertices;
     GLuint nFaces;
     GLuint nIndices;
@@ -74,7 +79,7 @@ private:
     vector<GLuint> VBOs;
     GLuint EBO;
 };
-GLuint allocateVBO(const GLuint attribIndex, vector<glm::vec3>& vertexData);
+
 GLuint allocateVBO(vector<VertexData>& vertexData);
 GLuint allocateVAO();
 GLuint allocateEBO(vector<GLuint> indices);

@@ -1,24 +1,37 @@
 #include "Mesh.h"
 
-Mesh::Mesh(MeshData *_meshData)
+Mesh::Mesh()
 {
-    nVertices = _meshData->countVertices();
-    nFaces = _meshData->countFaces();
-    nIndices = _meshData->countIndices();
+}
+
+Mesh::Mesh(MeshData* _meshData)
+{
+    Init(*_meshData);
+}
+
+void Mesh::Init(MeshData& _meshData)
+{
+    if (isInit) return;
+
+    nVertices = _meshData.countVertices();
+    nFaces = _meshData.countFaces();
+    nIndices = _meshData.countIndices();
 
     VAO = allocateVAO();
     {
         glBindVertexArray(VAO);
-        VBOs.push_back(allocateVBO(_meshData->getVertexData()));
+        VBOs.push_back(allocateVBO(_meshData.getVertexData()));
         glBindVertexArray(0);
     }
 
     glBindVertexArray(VAO);
-    EBO = allocateEBO(_meshData->getIndices());
+    EBO = allocateEBO(_meshData.getIndices());
     glBindVertexArray(0);
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    isInit = true;
 }
 
 const GLuint Mesh::get_vertex_count()
@@ -81,24 +94,6 @@ GLuint allocateVBO(vector<VertexData>& vertexData)
 
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexData), (void*)offsetof(VertexData, texCoord));
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    glBindVertexArray(0);
-
-    return VBOIndex;
-}
-
-GLuint allocateVBO(const GLuint attribIndex, vector<glm::vec3>& vertexData)
-{
-    GLuint VBOIndex = 0;
-    glGenBuffers(1, &VBOIndex);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBOIndex);
-    glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(glm::vec3), &(vertexData.front()), GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(attribIndex);
-    glVertexAttribPointer(attribIndex, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
