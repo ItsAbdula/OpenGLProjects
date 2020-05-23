@@ -7,14 +7,14 @@ class Material
 private:
     GLuint programID;
 
-    GLuint diffuseMap;
-    GLuint specularMap;
+    GLuint diffuseMapID;
+    GLuint specularMapID;
 
 public:
     Material(GLuint _programID, GLuint _diffuseMap, GLuint _specularMap);
 
-    GLuint get_program();
+    GLuint getProgramID();
 
-    GLuint get_diffuseMap();
-    GLuint get_specularMap();
+    GLuint getDiffuseMapID();
+    GLuint getSpecularMapID();
 };

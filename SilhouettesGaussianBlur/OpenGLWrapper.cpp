@@ -41,7 +41,7 @@ void RenderObject::set_material(Material *_material)
 
 void RenderObject::render(Camera &camera)
 {
-    auto prog = material->get_program();
+    auto prog = material->getProgramID();
     glUseProgram(prog);
 
     auto viewPos = camera.transform.get_translate();
@@ -68,12 +68,12 @@ void RenderObject::render(Camera &camera)
 
     {
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, material->get_diffuseMap());
+        glBindTexture(GL_TEXTURE_2D, material->getDiffuseMapID());
     }
 
     {
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, material->get_specularMap());
+        glBindTexture(GL_TEXTURE_2D, material->getSpecularMapID());
     }
 
     drawMesh(mesh);
@@ -91,7 +91,7 @@ void RenderObject::projective_render(Camera &camera, Camera &projector)
     glm::mat4 projector_view = glm::lookAt(projector.transform.get_translate(), projector.transform.get_translate() + projector.transform.get_front(), projector.transform.get_up());
     glm::mat4 projector_projection = glm::perspective(glm::radians(projector.Zoom), 1.0f, 0.1f, 100.0f);
 
-    auto prog = material->get_program();
+    auto prog = material->getProgramID();
     glUseProgram(prog);
 
     auto viewPos = camera.transform.get_translate();
@@ -123,19 +123,19 @@ void RenderObject::projective_render(Camera &camera, Camera &projector)
     {
         set_uniform_value(prog, "material.diffuse", glm::ivec1{ 0 });
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, material->get_diffuseMap());
+        glBindTexture(GL_TEXTURE_2D, material->getDiffuseMapID());
     }
 
     {
         set_uniform_value(prog, "material.specular", glm::ivec1{ 1 });
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, material->get_specularMap());
+        glBindTexture(GL_TEXTURE_2D, material->getSpecularMapID());
     }
 
     {
         set_uniform_value(prog, "projImage", glm::ivec1{ 2 });
         glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, material->get_specularMap());
+        glBindTexture(GL_TEXTURE_2D, material->getSpecularMapID());
     }
 
     drawMesh(mesh);
