@@ -6,6 +6,11 @@ using namespace std;
 
 static Assimp::Importer importer;
 
+string FileSystem::getExtension(const string &filePath)
+{
+    return filePath.substr(filePath.find_last_of(".") + 1);
+}
+
 string FileSystem::readFile(const string &path)
 {
     string contents;

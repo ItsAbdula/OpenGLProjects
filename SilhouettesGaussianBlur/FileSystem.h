@@ -14,6 +14,7 @@ using namespace std;
 class FileSystem
 {
 public:
+    static string getExtension(const string &filePath);
     static string readFile(const string &path);
     static string readShader(const string &name);
 
