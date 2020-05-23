@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <map>
 
 #include "FileSystem.h"
 #include "ResourceManager.h"
@@ -19,7 +20,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 50.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));
 
 double lastX = SCR_WIDTH / 2.0f;
 double lastY = SCR_HEIGHT / 2.0f;
@@ -30,6 +31,9 @@ bool firstMouse = true;
 // timing
 double deltaTime = 0.0f;
 double lastFrame = 0.0f;
+
+// RenderObjects
+std::map<std::string, RenderObject> RenderObjects;
 
 int main()
 {
@@ -60,6 +64,10 @@ int main()
         return -1;
     }
 
+    {
+        glEnable(GL_DEPTH_TEST);
+    }
+
     auto black = ResourceManager::getInstance().loadImage("black.png", ImageType::REPEAT);
     auto magenta = ResourceManager::getInstance().loadImage("magenta.png", ImageType::REPEAT);
     auto orange = ResourceManager::getInstance().loadImage("orange.png", ImageType::REPEAT);
@@ -80,14 +88,14 @@ int main()
 
     auto defaultMaterial = new Material(lightmap, orange, transparent);
 
-    auto renderCow = RenderObject(&cow);
+    RenderObjects["RenderCow"] = RenderObject(cow);
     {
-        auto transform = renderCow.get_transform();
+        auto transform = RenderObjects["RenderCow"].get_transform();
         //transform->set_translate(glm::vec3(0.0f, -10.0f, -40.0f));
         //transform->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
     }
     {
-        renderCow.set_material(defaultMaterial);
+        RenderObjects["RenderCow"].set_material(defaultMaterial);
     }
 
     while (!glfwWindowShouldClose(window))
@@ -102,7 +110,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         {
-            renderCow.render(camera);
+            RenderObjects["RenderCow"].render(camera);
         }
 
         glfwSwapBuffers(window);
@@ -151,7 +159,6 @@ void mouse_btn_callBack(GLFWwindow* window, int btn, int action, int mods)
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    // left click and drag: move camera
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1))
     {
         int width, height;
@@ -160,11 +167,16 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
         double yoffset = ((lastY - ypos) / (width) * 180);
         lastX = xpos;
         lastY = ypos;
-        camera.ProcessMouseMovement(xoffset, yoffset);
+
+        //camera.ProcessMouseMovement(xoffset, yoffset);
+        auto rotate = RenderObjects["RenderCow"].get_transform()->get_rotate();
+        rotate.x -= yoffset;
+        rotate.y += xoffset;
+
+        RenderObjects["RenderCow"].get_transform()->set_rotate(rotate);
     }
 
-    // right click and drag: move projector image
-    else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2))
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2))
     {
         int width, height;
         glfwGetWindowSize(window, &width, &height);
