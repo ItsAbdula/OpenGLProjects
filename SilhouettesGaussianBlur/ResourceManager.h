@@ -18,10 +18,10 @@
 class ResourceManager : public Singleton<ResourceManager>
 {
 public:
-    MeshData *loadModel(const std::string &name);
-    Image * makeImage(std::string fileName, int * width, int * height, int * nrChannels);
-    void unloadImage(Image * img);
-    GLuint loadImage(const std::string fileName, const ImageType type);
+    MeshData* loadModel(const std::string &name);
+    Image* makeImage(std::string fileName, int* width, int* height, int* nrChannels);
+    void unloadImage(Image* img);
+    GLuint loadImage(const std::string fileName, const ImageType type = ImageType::REPEAT);
 
 private:
 };
