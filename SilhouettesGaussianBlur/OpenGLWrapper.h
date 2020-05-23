@@ -18,16 +18,18 @@ private:
     GLuint id;
 
     Transform transform;
-    Mesh *mesh;
+    Mesh mesh;
     Material *material;
 
 public:
-    RenderObject(Mesh * _mesh);
+    RenderObject();
+    RenderObject(Mesh& _mesh);
 
     Transform *get_transform();
     Material *get_material();
     GLuint get_vertex_count();
 
+    void setMesh(Mesh& _mesh);
     void set_material(Material *_material);
 
     void render(Camera &camera);

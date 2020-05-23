@@ -8,10 +8,15 @@ const unsigned int _SCR_HEIGHT = 600;
 // lighting
 glm::vec3 _lightPos(1.2f, 20.0f, 2.0f);
 
-RenderObject::RenderObject(Mesh * _mesh)
+RenderObject::RenderObject()
+{
+    mesh = Mesh();
+    transform = Transform();
+}
+
+RenderObject::RenderObject(Mesh& _mesh) : mesh(_mesh)
 {
     transform = Transform();
-    mesh = _mesh;
 }
 
 Material *RenderObject::get_material()
@@ -21,7 +26,7 @@ Material *RenderObject::get_material()
 
 GLuint RenderObject::get_vertex_count()
 {
-    return mesh->get_vertex_count();
+    return mesh.get_vertex_count();
 }
 
 Transform *RenderObject::get_transform()
@@ -71,7 +76,7 @@ void RenderObject::render(Camera &camera)
         glBindTexture(GL_TEXTURE_2D, material->get_specularMap());
     }
 
-    drawMesh(*mesh);
+    drawMesh(mesh);
 
     glUseProgram(0);
 }
@@ -133,7 +138,7 @@ void RenderObject::projective_render(Camera &camera, Camera &projector)
         glBindTexture(GL_TEXTURE_2D, material->get_specularMap());
     }
 
-    drawMesh(*mesh);
+    drawMesh(mesh);
 
     glUseProgram(0);
 }
