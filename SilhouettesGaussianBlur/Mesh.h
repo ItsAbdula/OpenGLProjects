@@ -56,11 +56,7 @@ private:
     GLuint EBO;
 };
 GLuint allocateVBO(const GLuint attribIndex, vector<glm::vec3> *VBO);
-GLuint allocateVBO(const GLuint attribIndex, vector<glm::vec2> *VBO);
-GLuint *allocateVBOs(GLuint VAO, vector<vector<glm::vec3> *> &vertexInfoVec3, vector<vector<glm::vec2> *> &vertexInfoVec2);
-
 GLuint allocateVAO();
-
 GLuint allocateEBO(vector<GLuint> indices);
 
 void drawMesh(Mesh &mesh);
