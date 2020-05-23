@@ -11,6 +11,7 @@ private:
     GLuint specularMapID;
 
 public:
+    Material();
     Material(GLuint _programID, GLuint _diffuseMap, GLuint _specularMap);
 
     GLuint getProgramID();

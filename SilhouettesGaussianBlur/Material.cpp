@@ -1,5 +1,9 @@
 #include "Material.h"
 
+Material::Material()
+{
+}
+
 Material::Material(GLuint _programID, GLuint _diffuseMap, GLuint _specularMap)
 {
     programID = _programID;
