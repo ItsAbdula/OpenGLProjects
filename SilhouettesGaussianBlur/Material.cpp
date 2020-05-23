@@ -4,21 +4,21 @@ Material::Material(GLuint _programID, GLuint _diffuseMap, GLuint _specularMap)
 {
     programID = _programID;
 
-    diffuseMap = _diffuseMap;
-    specularMap = _specularMap;
+    diffuseMapID = _diffuseMap;
+    specularMapID = _specularMap;
 }
 
-GLuint Material::get_program()
+GLuint Material::getProgramID()
 {
     return programID;
 }
 
-GLuint Material::get_diffuseMap()
+GLuint Material::getDiffuseMapID()
 {
-    return diffuseMap;
+    return diffuseMapID;
 }
 
-GLuint Material::get_specularMap()
+GLuint Material::getSpecularMapID()
 {
-    return specularMap;
+    return specularMapID;
 }
