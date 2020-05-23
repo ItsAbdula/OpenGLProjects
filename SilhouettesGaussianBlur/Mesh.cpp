@@ -112,6 +112,7 @@ void deleteMesh(Mesh &mesh)
 MeshData::MeshData(const aiScene* _scene)
 {
     if (_scene == NULL) return;
+    if (_scene->HasMeshes() == false) return;
 
     vertices = copyVertices(_scene);
     faces = copyFaces(_scene);
@@ -136,8 +137,6 @@ const GLuint MeshData::countIndices()
 vector<glm::vec3> MeshData::copyVertices(const aiScene* pScene)
 {
     vector<glm::vec3> vertices;
-    if (pScene->HasMeshes() == false) return vertices;
-
     for (unsigned int i = 0; i < pScene->mNumMeshes; i++)
     {
         auto mesh = pScene->mMeshes[i];
@@ -153,8 +152,6 @@ vector<glm::vec3> MeshData::copyVertices(const aiScene* pScene)
 vector<vector<GLuint>> MeshData::copyFaces(const aiScene* pScene)
 {
     vector<vector<GLuint>> faces;
-    if (pScene->HasMeshes() == false) return faces;
-
     for (unsigned int i = 0; i < pScene->mNumMeshes; i++)
     {
         auto mesh = pScene->mMeshes[i];
@@ -178,8 +175,6 @@ vector<vector<GLuint>> MeshData::copyFaces(const aiScene* pScene)
 vector<GLuint> MeshData::copyIndices(const aiScene* pScene)
 {
     vector<GLuint> indices;
-    if (pScene->HasMeshes() == false) return indices;
-
     for (unsigned int i = 0; i < pScene->mNumMeshes; i++)
     {
         auto mesh = pScene->mMeshes[i];
