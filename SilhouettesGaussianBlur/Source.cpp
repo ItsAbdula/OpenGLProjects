@@ -73,6 +73,7 @@ int main()
 
     auto cow = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
     auto cow1 = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
+    auto cow2 = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
     auto cube = Mesh(ResourceManager::getInstance().loadModel("cube.obj"));
     auto plane = Mesh(ResourceManager::getInstance().loadModel("plane.obj"));
     auto sphere = Mesh(ResourceManager::getInstance().loadModel("sphere.obj"));
@@ -83,28 +84,40 @@ int main()
     auto lamp = build_program("Lighting_Lamp");
     auto lightmap = build_program("Lighting_Maps");
     auto textureProgram = build_program("Texture");
+    auto ndotv = build_program("ndotv");
     auto silhouettes = build_program("Silhouettes");
 
     Materials["Black"] = Material(lightmap, ResourceManager::getInstance().loadImage("black.png"), transparent);
     Materials["Magenta"] = Material(lightmap, ResourceManager::getInstance().loadImage("magenta.png"), transparent);
     Materials["Orange"] = Material(lightmap, ResourceManager::getInstance().loadImage("orange.png"), transparent);
     Materials["White"] = Material(lightmap, ResourceManager::getInstance().loadImage("white.png"), transparent);
+    Materials["ndotv"] = Material(ndotv, 0, 0);
     Materials["Silhouettes"] = Material(silhouettes, 0, 0);
 
     RenderObjects["Cow"] = RenderObject(cow);
     {
         auto transform = RenderObjects["Cow"].get_transform();
-        //transform->set_translate(glm::vec3(0.0f, -10.0f, -40.0f));
+        transform->set_translate(glm::vec3(-2.0f, 0.0f, 0.0f));
         //transform->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
     }
     {
         RenderObjects["Cow"].set_material(&Materials["Black"]);
     }
 
-    RenderObjects["SilhouetteCow"] = RenderObject(cow1);
+    RenderObjects["ndotvCow"] = RenderObject(cow1);
+    {
+        auto transform = RenderObjects["ndotvCow"].get_transform();
+        //transform->set_translate(glm::vec3(0.0f, -10.0f, -40.0f));
+        //transform->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
+    }
+    {
+        RenderObjects["ndotvCow"].set_material(&Materials["ndotv"]);
+    }
+
+    RenderObjects["SilhouetteCow"] = RenderObject(cow2);
     {
         auto transform = RenderObjects["SilhouetteCow"].get_transform();
-        //transform->set_translate(glm::vec3(0.0f, -10.0f, -40.0f));
+        transform->set_translate(glm::vec3(2.0f, 0.0f, 0.0f));
         //transform->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
     }
     {
@@ -124,6 +137,7 @@ int main()
 
         {
             RenderObjects["Cow"].render(camera);
+            RenderObjects["ndotvCow"].ndotvRender(camera);
             RenderObjects["SilhouetteCow"].silhouetteRender(camera);
         }
 

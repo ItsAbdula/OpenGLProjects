@@ -33,6 +33,7 @@ public:
     void set_material(Material *_material);
 
     void render(Camera &camera);
+    void ndotvRender(Camera & camera);
     void projective_render(Camera &camera, Camera &projector);
     void silhouetteRender(Camera &camera);
 };

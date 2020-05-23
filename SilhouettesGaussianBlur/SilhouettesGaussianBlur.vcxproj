@@ -160,6 +160,8 @@
   <ItemGroup>
     <None Include="..\Shaders\Lighting_Maps.frag" />
     <None Include="..\Shaders\Lighting_Maps.vert" />
+    <None Include="..\Shaders\ndotv.frag" />
+    <None Include="..\Shaders\ndotv.vert" />
     <None Include="..\Shaders\RenderObject.frag" />
     <None Include="..\Shaders\RenderObject.vert" />
     <None Include="..\Shaders\Silhouettes.frag" />

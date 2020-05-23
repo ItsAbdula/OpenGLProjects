@@ -103,5 +103,11 @@
     <None Include="..\Shaders\Lighting_Maps.vert">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="..\Shaders\ndotv.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\ndotv.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
