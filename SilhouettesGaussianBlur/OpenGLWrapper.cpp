@@ -81,6 +81,40 @@ void RenderObject::render(Camera &camera)
     glUseProgram(0);
 }
 
+void RenderObject::silhouetteRender(Camera &camera)
+{
+    auto prog = material->getProgramID();
+    glUseProgram(prog);
+
+    auto viewPos = camera.transform.get_translate();
+
+    set_uniform_value(prog, "viewPos", viewPos);
+
+    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
+    glm::mat4 view = camera.GetViewMatrix();
+    glm::mat4 model = transform.get_model_matrix();
+
+    set_uniform_value(prog, "projection", projection);
+    set_uniform_value(prog, "view", view);
+    set_uniform_value(prog, "model", model);
+
+    set_uniform_value(prog, "threshold", glm::fvec1(0.8f));
+
+    {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, material->getDiffuseMapID());
+    }
+
+    {
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, material->getSpecularMapID());
+    }
+
+    drawMesh(mesh);
+
+    glUseProgram(0);
+}
+
 void RenderObject::projective_render(Camera &camera, Camera &projector)
 {
     glm::mat4 bias = { 0.5f, 0.0f, 0.0f, 0.5f,

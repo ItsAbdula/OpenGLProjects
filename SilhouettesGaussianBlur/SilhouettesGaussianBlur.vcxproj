@@ -158,8 +158,12 @@
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Shaders\Lighting_Maps.frag" />
+    <None Include="..\Shaders\Lighting_Maps.vert" />
     <None Include="..\Shaders\RenderObject.frag" />
     <None Include="..\Shaders\RenderObject.vert" />
+    <None Include="..\Shaders\Silhouettes.frag" />
+    <None Include="..\Shaders\Silhouettes.vert" />
     <None Include="..\Shaders\simpleShader.frag" />
     <None Include="..\Shaders\simpleShader.vert" />
   </ItemGroup>

@@ -34,6 +34,7 @@ public:
 
     void render(Camera &camera);
     void projective_render(Camera &camera, Camera &projector);
+    void silhouetteRender(Camera &camera);
 };
 
 GLint compile_shader(const GLint shaderType, const std::string *shaderSource);

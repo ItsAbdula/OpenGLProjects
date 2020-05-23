@@ -32,8 +32,9 @@ bool firstMouse = true;
 double deltaTime = 0.0f;
 double lastFrame = 0.0f;
 
-// RenderObjects
+// Global Map
 std::map<std::string, RenderObject> RenderObjects;
+std::map<std::string, Material> Materials;
 
 int main()
 {
@@ -68,13 +69,10 @@ int main()
         glEnable(GL_DEPTH_TEST);
     }
 
-    auto black = ResourceManager::getInstance().loadImage("black.png", ImageType::REPEAT);
-    auto magenta = ResourceManager::getInstance().loadImage("magenta.png", ImageType::REPEAT);
-    auto orange = ResourceManager::getInstance().loadImage("orange.png", ImageType::REPEAT);
-    auto white = ResourceManager::getInstance().loadImage("white.png", ImageType::REPEAT);
-    auto transparent = ResourceManager::getInstance().loadImage("transparent.png", ImageType::REPEAT);
+    auto transparent = ResourceManager::getInstance().loadImage("transparent.png");
 
     auto cow = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
+    auto cow1 = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
     auto cube = Mesh(ResourceManager::getInstance().loadModel("cube.obj"));
     auto plane = Mesh(ResourceManager::getInstance().loadModel("plane.obj"));
     auto sphere = Mesh(ResourceManager::getInstance().loadModel("sphere.obj"));
@@ -85,17 +83,32 @@ int main()
     auto lamp = build_program("Lighting_Lamp");
     auto lightmap = build_program("Lighting_Maps");
     auto textureProgram = build_program("Texture");
+    auto silhouettes = build_program("Silhouettes");
 
-    auto defaultMaterial = new Material(lightmap, orange, transparent);
+    Materials["Black"] = Material(lightmap, ResourceManager::getInstance().loadImage("black.png"), transparent);
+    Materials["Magenta"] = Material(lightmap, ResourceManager::getInstance().loadImage("magenta.png"), transparent);
+    Materials["Orange"] = Material(lightmap, ResourceManager::getInstance().loadImage("orange.png"), transparent);
+    Materials["White"] = Material(lightmap, ResourceManager::getInstance().loadImage("white.png"), transparent);
+    Materials["Silhouettes"] = Material(silhouettes, 0, 0);
 
-    RenderObjects["RenderCow"] = RenderObject(cow);
+    RenderObjects["Cow"] = RenderObject(cow);
     {
-        auto transform = RenderObjects["RenderCow"].get_transform();
+        auto transform = RenderObjects["Cow"].get_transform();
         //transform->set_translate(glm::vec3(0.0f, -10.0f, -40.0f));
         //transform->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
     }
     {
-        RenderObjects["RenderCow"].set_material(defaultMaterial);
+        RenderObjects["Cow"].set_material(&Materials["Black"]);
+    }
+
+    RenderObjects["SilhouetteCow"] = RenderObject(cow1);
+    {
+        auto transform = RenderObjects["SilhouetteCow"].get_transform();
+        //transform->set_translate(glm::vec3(0.0f, -10.0f, -40.0f));
+        //transform->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
+    }
+    {
+        RenderObjects["SilhouetteCow"].set_material(&Materials["Silhouettes"]);
     }
 
     while (!glfwWindowShouldClose(window))
@@ -110,7 +123,8 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         {
-            RenderObjects["RenderCow"].render(camera);
+            RenderObjects["Cow"].render(camera);
+            RenderObjects["SilhouetteCow"].silhouetteRender(camera);
         }
 
         glfwSwapBuffers(window);
@@ -137,6 +151,36 @@ void processInput(GLFWwindow *window)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+    {
+        for (auto& elem : RenderObjects)
+        {
+            if (elem.first == "Cow") continue;
+
+            elem.second.set_material(&Materials["Black"]);
+        }
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+    {
+        for (auto& elem : RenderObjects)
+        {
+            if (elem.first == "Cow") continue;
+
+            elem.second.set_material(&Materials["Magenta"]);
+        }
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+    {
+        for (auto& elem : RenderObjects)
+        {
+            if (elem.first == "Cow") continue;
+
+            elem.second.set_material(&Materials["Orange"]);
+        }
+    }
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -168,12 +212,16 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
         lastX = xpos;
         lastY = ypos;
 
-        //camera.ProcessMouseMovement(xoffset, yoffset);
-        auto rotate = RenderObjects["RenderCow"].get_transform()->get_rotate();
-        rotate.x -= yoffset;
-        rotate.y += xoffset;
+        for (auto& elem : RenderObjects)
+        {
+            if (elem.first == "Cow") continue;
 
-        RenderObjects["RenderCow"].get_transform()->set_rotate(rotate);
+            auto rotate = elem.second.get_transform()->get_rotate();
+            rotate.x -= yoffset;
+            rotate.y += xoffset;
+
+            elem.second.get_transform()->set_rotate(rotate);
+        }
     }
 
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2))
