@@ -24,8 +24,6 @@ Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
 
 double lastX = SCR_WIDTH / 2.0f;
 double lastY = SCR_HEIGHT / 2.0f;
-double decalX = SCR_WIDTH / 2.0f;
-double decalY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
 // timing
@@ -33,7 +31,7 @@ double deltaTime = 0.0f;
 double lastFrame = 0.0f;
 
 // HowtoRender
-int HowToRender = -1;
+int HowToRender = 1;
 
 // Global Map
 std::map<std::string, RenderObject> RenderObjects;
@@ -72,35 +70,35 @@ int main()
         glEnable(GL_DEPTH_TEST);
     }
 
-    auto transparent = ResourceManager::getInstance().loadImage("transparent.png");
+    //auto transparent = ResourceManager::getInstance().loadImage("transparent.png");
 
     auto cow = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
-    auto cow1 = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
-    auto cow2 = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
-    auto cow3 = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
-    auto cube = Mesh(ResourceManager::getInstance().loadModel("cube.obj"));
-    auto plane = Mesh(ResourceManager::getInstance().loadModel("plane.obj"));
-    auto sphere = Mesh(ResourceManager::getInstance().loadModel("sphere.obj"));
-    auto teapot = Mesh(ResourceManager::getInstance().loadModel("teapot.obj"));
+    //auto cow1 = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
+    //auto cow2 = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
+    //auto cow3 = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
+    //auto cube = Mesh(ResourceManager::getInstance().loadModel("cube.obj"));
+    //auto plane = Mesh(ResourceManager::getInstance().loadModel("plane.obj"));
+    //auto sphere = Mesh(ResourceManager::getInstance().loadModel("sphere.obj"));
+    //auto teapot = Mesh(ResourceManager::getInstance().loadModel("teapot.obj"));
 
-    auto renderObject = build_program("RenderObject");
-    auto lighting = build_program("Lighting_Specular");
-    auto lamp = build_program("Lighting_Lamp");
+    //auto renderObject = build_program("RenderObject");
+    //auto lighting = build_program("Lighting_Specular");
+    //auto lamp = build_program("Lighting_Lamp");
+    //auto textureProgram = build_program("Texture");
     auto lightmap = build_program("Lighting_Maps");
-    auto textureProgram = build_program("Texture");
     auto ndotv = build_program("ndotv");
     auto silhouettes = build_program("Silhouettes");
     auto silhouettesGaussianBlur = build_program("SilhouettesGaussianBlur");
 
-    Materials["Black"] = Material(lightmap, ResourceManager::getInstance().loadImage("black.png"), transparent);
-    Materials["Magenta"] = Material(lightmap, ResourceManager::getInstance().loadImage("magenta.png"), transparent);
-    Materials["Orange"] = Material(lightmap, ResourceManager::getInstance().loadImage("orange.png"), transparent);
-    Materials["White"] = Material(lightmap, ResourceManager::getInstance().loadImage("white.png"), transparent);
+    //Materials["Black"] = Material(lightmap, ResourceManager::getInstance().loadImage("black.png"), transparent);
+    //Materials["Orange"] = Material(lightmap, ResourceManager::getInstance().loadImage("orange.png"), transparent);
+    //Materials["White"] = Material(lightmap, ResourceManager::getInstance().loadImage("white.png"), transparent);
+    //Materials["Magenta"] = Material(lightmap, ResourceManager::getInstance().loadImage("magenta.png"), transparent);
     Materials["ndotv"] = Material(ndotv, 0, 0);
     Materials["Silhouettes"] = Material(silhouettes, 0, 0);
     Materials["SilhouettesGaussianBlur"] = Material(silhouettesGaussianBlur, 0, 0);
 
-    RenderObjects["SilhouettesGaussianBlurCow"] = RenderObject(cow3);
+    RenderObjects["SilhouettesGaussianBlurCow"] = RenderObject(cow);
     {
         auto transform = RenderObjects["SilhouettesGaussianBlurCow"].get_transform();
         transform->set_translate(glm::vec3(0.0f, 0.0f, -5.0f));
@@ -145,11 +143,6 @@ int main()
             {
                 RenderObjects["SilhouettesGaussianBlurCow"].set_material(&Materials["SilhouettesGaussianBlur"]);
                 RenderObjects["SilhouettesGaussianBlurCow"].silhouetteGaussianBlurRender(camera);
-            }
-            else
-            {
-                RenderObjects["SilhouettesGaussianBlurCow"].set_material(&Materials["Magenta"]);
-                RenderObjects["SilhouettesGaussianBlurCow"].render(camera);
             }
         }
 
@@ -205,11 +198,6 @@ void mouse_btn_callBack(GLFWwindow* window, int btn, int action, int mods)
     {
         glfwGetCursorPos(window, &lastX, &lastY);
     }
-
-    if (btn == GLFW_MOUSE_BUTTON_2 && action == GLFW_PRESS)
-    {
-        glfwGetCursorPos(window, &decalX, &decalX);
-    }
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
@@ -231,16 +219,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
             elem.second.get_transform()->set_rotate(rotate);
         }
-    }
-
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2))
-    {
-        int width, height;
-        glfwGetWindowSize(window, &width, &height);
-        double xoffset = ((xpos - decalX) / (height) * 180);
-        double yoffset = ((decalY - ypos) / (width) * 180);
-        decalX = xpos;
-        decalY = ypos;
     }
 }
 
