@@ -130,7 +130,7 @@ void RenderObject::silhouetteRender(Camera &camera)
     set_uniform_value(prog, "view", view);
     set_uniform_value(prog, "model", model);
 
-    set_uniform_value(prog, "threshold", glm::fvec1(0.8f));
+    set_uniform_value(prog, "threshold", glm::fvec1(0.3f));
 
     {
         glActiveTexture(GL_TEXTURE0);
