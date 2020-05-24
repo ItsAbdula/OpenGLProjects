@@ -34,7 +34,7 @@ void Mesh::Init(MeshData& _meshData)
     isInit = true;
 }
 
-const GLuint Mesh::get_vertex_count()
+const GLuint Mesh::getVertexCount()
 {
     return nVertices;
 }

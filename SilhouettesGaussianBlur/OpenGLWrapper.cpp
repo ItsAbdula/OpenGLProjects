@@ -27,22 +27,22 @@ RenderObject::RenderObject(Mesh& _mesh) : mesh(_mesh)
     transform = Transform();
 }
 
-Material *RenderObject::get_material()
+Material *RenderObject::getMaterial()
 {
     return material;
 }
 
-GLuint RenderObject::get_vertex_count()
+GLuint RenderObject::getVertexCount()
 {
-    return mesh.get_vertex_count();
+    return mesh.getVertexCount();
 }
 
-Transform *RenderObject::get_transform()
+Transform *RenderObject::getTransform()
 {
     return &transform;
 }
 
-void RenderObject::set_material(Material *_material)
+void RenderObject::setMaterial(Material *_material)
 {
     material = _material;
 }
@@ -54,25 +54,25 @@ void RenderObject::render(Camera &camera)
 
     auto viewPos = camera.transform.get_translate();
 
-    set_uniform_value(prog, "light.position", _lightPos);
-    set_uniform_value(prog, "viewPos", viewPos);
+    setUniformValue(prog, "light.position", _lightPos);
+    setUniformValue(prog, "viewPos", viewPos);
 
     glm::vec3 ambient = { 0.2f, 0.2f, 0.2f };
     glm::vec3 diffuse = { 0.5f, 0.5f, 0.5f };
     glm::vec3 specular = { 1.0f, 1.0f, 1.0f };
-    set_uniform_value(prog, "light.ambient", ambient);
-    set_uniform_value(prog, "light.diffuse", diffuse);
-    set_uniform_value(prog, "light.specular", specular);
+    setUniformValue(prog, "light.ambient", ambient);
+    setUniformValue(prog, "light.diffuse", diffuse);
+    setUniformValue(prog, "light.specular", specular);
 
-    set_uniform_value(prog, "material.shininess", glm::fvec1{ 64.0f });
+    setUniformValue(prog, "material.shininess", glm::fvec1{ 64.0f });
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
     glm::mat4 view = camera.GetViewMatrix();
     glm::mat4 model = transform.get_model_matrix();
 
-    set_uniform_value(prog, "projection", projection);
-    set_uniform_value(prog, "view", view);
-    set_uniform_value(prog, "model", model);
+    setUniformValue(prog, "projection", projection);
+    setUniformValue(prog, "view", view);
+    setUniformValue(prog, "model", model);
 
     {
         glActiveTexture(GL_TEXTURE0);
@@ -96,15 +96,15 @@ void RenderObject::ndotvRender(Camera &camera)
 
     auto viewPos = camera.transform.get_translate();
 
-    set_uniform_value(prog, "viewPos", viewPos);
+    setUniformValue(prog, "viewPos", viewPos);
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
     glm::mat4 view = camera.GetViewMatrix();
     glm::mat4 model = transform.get_model_matrix();
 
-    set_uniform_value(prog, "projection", projection);
-    set_uniform_value(prog, "view", view);
-    set_uniform_value(prog, "model", model);
+    setUniformValue(prog, "projection", projection);
+    setUniformValue(prog, "view", view);
+    setUniformValue(prog, "model", model);
 
     {
         glActiveTexture(GL_TEXTURE0);
@@ -128,17 +128,17 @@ void RenderObject::silhouetteRender(Camera &camera)
 
     auto viewPos = camera.transform.get_translate();
 
-    set_uniform_value(prog, "viewPos", viewPos);
+    setUniformValue(prog, "viewPos", viewPos);
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
     glm::mat4 view = camera.GetViewMatrix();
     glm::mat4 model = transform.get_model_matrix();
 
-    set_uniform_value(prog, "projection", projection);
-    set_uniform_value(prog, "view", view);
-    set_uniform_value(prog, "model", model);
+    setUniformValue(prog, "projection", projection);
+    setUniformValue(prog, "view", view);
+    setUniformValue(prog, "model", model);
 
-    set_uniform_value(prog, "threshold", glm::fvec1(0.3f));
+    setUniformValue(prog, "threshold", glm::fvec1(0.3f));
 
     {
         glActiveTexture(GL_TEXTURE0);
@@ -281,7 +281,7 @@ void setupGaussianBlurUniforms(GLuint programID)
         uniName << "Weight[" << i << "]";
         float val = weights[i] / sum;
 
-        set_uniform_value(programID, uniName.str().c_str(), glm::fvec1(val));
+        setUniformValue(programID, uniName.str().c_str(), glm::fvec1(val));
     }
 }
 
@@ -291,29 +291,29 @@ void RenderObject::silhouetteGaussianBlurRender(Camera &camera)
     glUseProgram(prog);
 
     ////pass1
-    set_uniform_value(prog, "Pass", glm::ivec1(1));
+    setUniformValue(prog, "Pass", glm::ivec1(1));
 
     glBindFramebuffer(GL_FRAMEBUFFER, renderFBO);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
     auto viewPos = camera.transform.get_translate();
-    set_uniform_value(prog, "viewPos", viewPos);
+    setUniformValue(prog, "viewPos", viewPos);
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
     glm::mat4 view = camera.GetViewMatrix();
     glm::mat4 model = transform.get_model_matrix();
 
-    set_uniform_value(prog, "projection", projection);
-    set_uniform_value(prog, "view", view);
-    set_uniform_value(prog, "model", model);
+    setUniformValue(prog, "projection", projection);
+    setUniformValue(prog, "view", view);
+    setUniformValue(prog, "model", model);
 
-    set_uniform_value(prog, "threshold", glm::fvec1(0.3f));
+    setUniformValue(prog, "threshold", glm::fvec1(0.3f));
 
     drawMesh(mesh);
 
     //pass2
-    set_uniform_value(prog, "Pass", glm::ivec1(2));
+    setUniformValue(prog, "Pass", glm::ivec1(2));
 
     glBindFramebuffer(GL_FRAMEBUFFER, intermediateFBO);
 
@@ -326,16 +326,16 @@ void RenderObject::silhouetteGaussianBlurRender(Camera &camera)
     model = glm::mat4(1.0f);
     view = glm::mat4(1.0f);
     projection = glm::mat4(1.0f);
-    set_uniform_value(prog, "projection", projection);
-    set_uniform_value(prog, "view", view);
-    set_uniform_value(prog, "model", model);
+    setUniformValue(prog, "projection", projection);
+    setUniformValue(prog, "view", view);
+    setUniformValue(prog, "model", model);
 
     // Render the full-screen quad
     glBindVertexArray(fsQuad);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     ////pass3
-    set_uniform_value(prog, "Pass", glm::ivec1(3));
+    setUniformValue(prog, "Pass", glm::ivec1(3));
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -347,9 +347,9 @@ void RenderObject::silhouetteGaussianBlurRender(Camera &camera)
     model = glm::mat4(1.0f);
     view = glm::mat4(1.0f);
     projection = glm::mat4(1.0f);
-    set_uniform_value(prog, "projection", projection);
-    set_uniform_value(prog, "view", view);
-    set_uniform_value(prog, "model", model);
+    setUniformValue(prog, "projection", projection);
+    setUniformValue(prog, "view", view);
+    setUniformValue(prog, "model", model);
 
     // Render the full-screen quad
     glBindVertexArray(fsQuad);
@@ -358,7 +358,7 @@ void RenderObject::silhouetteGaussianBlurRender(Camera &camera)
     glUseProgram(0);
 }
 
-void RenderObject::projective_render(Camera &camera, Camera &projector)
+void RenderObject::projectiveRender(Camera &camera, Camera &projector)
 {
     glm::mat4 bias = { 0.5f, 0.0f, 0.0f, 0.5f,
                             0.0f, 0.5f, 0.0f, 0.5f,
@@ -373,44 +373,44 @@ void RenderObject::projective_render(Camera &camera, Camera &projector)
 
     auto viewPos = camera.transform.get_translate();
 
-    set_uniform_value(prog, "light.position", _lightPos);
-    set_uniform_value(prog, "viewPos", viewPos);
+    setUniformValue(prog, "light.position", _lightPos);
+    setUniformValue(prog, "viewPos", viewPos);
 
     glm::vec3 a = { 0.2f, 0.2f, 0.2f };
     glm::vec3 d = { 0.5f, 0.5f, 0.5f };
     glm::vec3 f = { 1.0f, 1.0f, 1.0f };
-    set_uniform_value(prog, "light.ambient", a);
-    set_uniform_value(prog, "light.diffuse", d);
-    set_uniform_value(prog, "light.specular", f);
+    setUniformValue(prog, "light.ambient", a);
+    setUniformValue(prog, "light.diffuse", d);
+    setUniformValue(prog, "light.specular", f);
 
-    set_uniform_value(prog, "material.shininess", glm::fvec1{ 64.0f });
+    setUniformValue(prog, "material.shininess", glm::fvec1{ 64.0f });
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
     glm::mat4 view = camera.GetViewMatrix();
     glm::mat4 model = transform.get_model_matrix();
 
-    set_uniform_value(prog, "projectorBias", bias);
-    set_uniform_value(prog, "projectorProjection", projector_projection);
-    set_uniform_value(prog, "projectorView", projector_view);
+    setUniformValue(prog, "projectorBias", bias);
+    setUniformValue(prog, "projectorProjection", projector_projection);
+    setUniformValue(prog, "projectorView", projector_view);
 
-    set_uniform_value(prog, "projection", projection);
-    set_uniform_value(prog, "view", view);
-    set_uniform_value(prog, "model", model);
+    setUniformValue(prog, "projection", projection);
+    setUniformValue(prog, "view", view);
+    setUniformValue(prog, "model", model);
 
     {
-        set_uniform_value(prog, "material.diffuse", glm::ivec1{ 0 });
+        setUniformValue(prog, "material.diffuse", glm::ivec1{ 0 });
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, material->getDiffuseMapID());
     }
 
     {
-        set_uniform_value(prog, "material.specular", glm::ivec1{ 1 });
+        setUniformValue(prog, "material.specular", glm::ivec1{ 1 });
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, material->getSpecularMapID());
     }
 
     {
-        set_uniform_value(prog, "projImage", glm::ivec1{ 2 });
+        setUniformValue(prog, "projImage", glm::ivec1{ 2 });
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, material->getSpecularMapID());
     }
@@ -420,14 +420,14 @@ void RenderObject::projective_render(Camera &camera, Camera &projector)
     glUseProgram(0);
 }
 
-GLuint build_program(const std::string name)
+GLuint buildProgram(const std::string name)
 {
     std::string shaderSources[5];
     shaderSources[0] = FileSystem::readShader("../Shaders/" + name + ".vert");
     shaderSources[1] = FileSystem::readShader("../Shaders/" + name + ".frag");
 
     std::vector<GLint> shaderIDs;
-    compile_shaders(&shaderIDs, shaderSources);
+    compileShaders(&shaderIDs, shaderSources);
 
     auto programID = glCreateProgram();
     for (const auto &i : shaderIDs)
@@ -443,13 +443,13 @@ GLuint build_program(const std::string name)
     return programID;
 }
 
-void compile_shaders(std::vector<GLint> *shaderIDs, const std::string *shaderSources)
+void compileShaders(std::vector<GLint> *shaderIDs, const std::string *shaderSources)
 {
-    shaderIDs->push_back(compile_shader(GL_VERTEX_SHADER, &shaderSources[0]));
-    shaderIDs->push_back(compile_shader(GL_FRAGMENT_SHADER, &shaderSources[1]));
+    shaderIDs->push_back(compileShader(GL_VERTEX_SHADER, &shaderSources[0]));
+    shaderIDs->push_back(compileShader(GL_FRAGMENT_SHADER, &shaderSources[1]));
 }
 
-GLint compile_shader(const GLint shaderType, const std::string *shaderSource)
+GLint compileShader(const GLint shaderType, const std::string *shaderSource)
 {
     GLuint shaderID;
     switch (shaderType)
@@ -479,48 +479,48 @@ GLint compile_shader(const GLint shaderType, const std::string *shaderSource)
     return shaderID;
 }
 
-void set_uniform_value(GLuint &prog, const char *name, glm::vec1 value)
+void setUniformValue(GLuint &prog, const char *name, glm::vec1 value)
 {
     auto uniform = glGetUniformLocation(prog, name);
     glUniform1fv(uniform, 1, &value.x);
 }
-void set_uniform_value(GLuint &prog, const char *name, glm::ivec1 value)
+void setUniformValue(GLuint &prog, const char *name, glm::ivec1 value)
 {
     auto uniform = glGetUniformLocation(prog, name);
     glUniform1iv(uniform, 1, &value.x);
 }
-void set_uniform_value(GLuint &prog, const char *name, glm::vec2 &value)
+void setUniformValue(GLuint &prog, const char *name, glm::vec2 &value)
 {
     auto uniform = glGetUniformLocation(prog, name);
     glUniform2fv(uniform, 1, &value.x);
 }
-void set_uniform_value(GLuint &prog, const char *name, glm::ivec2 &value)
+void setUniformValue(GLuint &prog, const char *name, glm::ivec2 &value)
 {
     auto uniform = glGetUniformLocation(prog, name);
     glUniform2iv(uniform, 1, &value.x);
 }
-void set_uniform_value(GLuint &prog, const char *name, glm::vec3 &value)
+void setUniformValue(GLuint &prog, const char *name, glm::vec3 &value)
 {
     auto uniform = glGetUniformLocation(prog, name);
     glUniform3fv(uniform, 1, &value.x);
 }
-void set_uniform_value(GLuint &prog, const char *name, glm::ivec3 &value)
+void setUniformValue(GLuint &prog, const char *name, glm::ivec3 &value)
 {
     auto uniform = glGetUniformLocation(prog, name);
     glUniform3iv(uniform, 1, &value.x);
 }
-void set_uniform_value(GLuint &prog, const char *name, glm::vec4 value)
+void setUniformValue(GLuint &prog, const char *name, glm::vec4 value)
 {
     auto uniform = glGetUniformLocation(prog, name);
     glUniform4fv(uniform, 1, &value.x);
 }
-void set_uniform_value(GLuint &prog, const char *name, glm::ivec4 value)
+void setUniformValue(GLuint &prog, const char *name, glm::ivec4 value)
 {
     auto uniform = glGetUniformLocation(prog, name);
     glUniform4iv(uniform, 1, &value.x);
 }
 
-void set_uniform_value(GLuint &prog, const char *name, glm::mat4 &value)
+void setUniformValue(GLuint &prog, const char *name, glm::mat4 &value)
 {
     auto uniform = glGetUniformLocation(prog, name);
     glUniformMatrix4fv(uniform, 1, GL_FALSE, &value[0][0]);

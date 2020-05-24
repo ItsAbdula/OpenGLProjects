@@ -25,34 +25,34 @@ public:
     RenderObject();
     RenderObject(Mesh& _mesh);
 
-    Transform *get_transform();
-    Material *get_material();
-    GLuint get_vertex_count();
+    Transform *getTransform();
+    Material *getMaterial();
+    GLuint getVertexCount();
 
     void setMesh(Mesh& _mesh);
-    void set_material(Material *_material);
+    void setMaterial(Material *_material);
 
     void render(Camera &camera);
     void ndotvRender(Camera & camera);
-    void projective_render(Camera &camera, Camera &projector);
+    void projectiveRender(Camera &camera, Camera &projector);
     void silhouetteRender(Camera &camera);
     void silhouetteGaussianBlurRender(Camera & camera);
 };
 
-GLint compile_shader(const GLint shaderType, const std::string *shaderSource);
-void compile_shaders(std::vector<GLint> *shaderIDs, const std::string *shaderSources);
+GLint compileShader(const GLint shaderType, const std::string *shaderSource);
+void compileShaders(std::vector<GLint> *shaderIDs, const std::string *shaderSources);
 float gauss(float x, float sigma2);
 void setupQuad();
 void setupFBO();
 void setupGaussianBlurUniforms(GLuint programID);
-GLuint build_program(const std::string name);
+GLuint buildProgram(const std::string name);
 
-void set_uniform_value(GLuint &prog, const char *name, glm::vec1 value);
-void set_uniform_value(GLuint &prog, const char *name, glm::ivec1 value);
-void set_uniform_value(GLuint &prog, const char *name, glm::vec2 &value);
-void set_uniform_value(GLuint &prog, const char *name, glm::ivec2 &value);
-void set_uniform_value(GLuint &prog, const char *name, glm::vec3 &value);
-void set_uniform_value(GLuint &prog, const char *name, glm::ivec3 &value);
-void set_uniform_value(GLuint &prog, const char *name, glm::vec4 &value);
-void set_uniform_value(GLuint &prog, const char *name, glm::ivec4 &value);
-void set_uniform_value(GLuint &prog, const char *name, glm::mat4 &value);
+void setUniformValue(GLuint &prog, const char *name, glm::vec1 value);
+void setUniformValue(GLuint &prog, const char *name, glm::ivec1 value);
+void setUniformValue(GLuint &prog, const char *name, glm::vec2 &value);
+void setUniformValue(GLuint &prog, const char *name, glm::ivec2 &value);
+void setUniformValue(GLuint &prog, const char *name, glm::vec3 &value);
+void setUniformValue(GLuint &prog, const char *name, glm::ivec3 &value);
+void setUniformValue(GLuint &prog, const char *name, glm::vec4 &value);
+void setUniformValue(GLuint &prog, const char *name, glm::ivec4 &value);
+void setUniformValue(GLuint &prog, const char *name, glm::mat4 &value);

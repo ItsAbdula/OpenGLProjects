@@ -41,7 +41,7 @@ int main()
 {
     string filePath = "";
     {
-        std::cout << "Please enter the path of input file. : " << std::endl;
+        std::cout << "Please enter the path of input file." << std::endl;
         std::cin >> filePath;
     }
 
@@ -74,10 +74,10 @@ int main()
 
     auto cow = Mesh(ResourceManager::getInstance().loadModelFromPath(filePath));
 
-    auto lightmap = build_program("Lighting_Maps");
-    auto ndotv = build_program("ndotv");
-    auto silhouettes = build_program("Silhouettes");
-    auto silhouettesGaussianBlur = build_program("SilhouettesGaussianBlur");
+    auto lightmap = buildProgram("Lighting_Maps");
+    auto ndotv = buildProgram("ndotv");
+    auto silhouettes = buildProgram("Silhouettes");
+    auto silhouettesGaussianBlur = buildProgram("SilhouettesGaussianBlur");
 
     Materials["ndotv"] = Material(ndotv, 0, 0);
     Materials["Silhouettes"] = Material(silhouettes, 0, 0);
@@ -85,12 +85,12 @@ int main()
 
     RenderObjects["SilhouettesGaussianBlurCow"] = RenderObject(cow);
     {
-        auto transform = RenderObjects["SilhouettesGaussianBlurCow"].get_transform();
+        auto transform = RenderObjects["SilhouettesGaussianBlurCow"].getTransform();
         transform->set_translate(glm::vec3(0.0f, 0.0f, -5.0f));
         transform->set_rotate(glm::vec3(0.0f, 180.0f, 0.0f));
     }
     {
-        RenderObjects["SilhouettesGaussianBlurCow"].set_material(&Materials["SilhouettesGaussianBlur"]);
+        RenderObjects["SilhouettesGaussianBlurCow"].setMaterial(&Materials["SilhouettesGaussianBlur"]);
 
         glUseProgram(Materials["SilhouettesGaussianBlur"].getProgramID());
 
@@ -116,17 +116,17 @@ int main()
         {
             if (HowToRender == 1)
             {
-                RenderObjects["SilhouettesGaussianBlurCow"].set_material(&Materials["ndotv"]);
+                RenderObjects["SilhouettesGaussianBlurCow"].setMaterial(&Materials["ndotv"]);
                 RenderObjects["SilhouettesGaussianBlurCow"].ndotvRender(camera);
             }
             else if (HowToRender == 2)
             {
-                RenderObjects["SilhouettesGaussianBlurCow"].set_material(&Materials["Silhouettes"]);
+                RenderObjects["SilhouettesGaussianBlurCow"].setMaterial(&Materials["Silhouettes"]);
                 RenderObjects["SilhouettesGaussianBlurCow"].silhouetteRender(camera);
             }
             else if (HowToRender == 3)
             {
-                RenderObjects["SilhouettesGaussianBlurCow"].set_material(&Materials["SilhouettesGaussianBlur"]);
+                RenderObjects["SilhouettesGaussianBlurCow"].setMaterial(&Materials["SilhouettesGaussianBlur"]);
                 RenderObjects["SilhouettesGaussianBlurCow"].silhouetteGaussianBlurRender(camera);
             }
         }
@@ -198,11 +198,11 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
         for (auto& elem : RenderObjects)
         {
-            auto rotate = elem.second.get_transform()->get_rotate();
+            auto rotate = elem.second.getTransform()->get_rotate();
             rotate.x -= yoffset;
             rotate.y += xoffset;
 
-            elem.second.get_transform()->set_rotate(rotate);
+            elem.second.getTransform()->set_rotate(rotate);
         }
     }
 }

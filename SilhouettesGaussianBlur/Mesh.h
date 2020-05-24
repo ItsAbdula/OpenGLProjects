@@ -62,7 +62,7 @@ public:
 
     void Init(MeshData& _meshData);
 
-    const GLuint get_vertex_count();
+    const GLuint getVertexCount();
     const GLuint get_index_count();
     const GLuint getVAO();
     const vector<GLuint> getVBOs();
