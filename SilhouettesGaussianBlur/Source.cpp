@@ -20,7 +20,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
 
 double lastX = SCR_WIDTH / 2.0f;
 double lastY = SCR_HEIGHT / 2.0f;
@@ -31,6 +31,9 @@ bool firstMouse = true;
 // timing
 double deltaTime = 0.0f;
 double lastFrame = 0.0f;
+
+// HowtoRender
+int HowToRender = -1;
 
 // Global Map
 std::map<std::string, RenderObject> RenderObjects;
@@ -97,41 +100,11 @@ int main()
     Materials["Silhouettes"] = Material(silhouettes, 0, 0);
     Materials["SilhouettesGaussianBlur"] = Material(silhouettesGaussianBlur, 0, 0);
 
-    RenderObjects["Cow"] = RenderObject(cow);
-    {
-        auto transform = RenderObjects["Cow"].get_transform();
-        transform->set_translate(glm::vec3(-2.0f, 0.0f, 0.0f));
-        //transform->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
-    }
-    {
-        RenderObjects["Cow"].set_material(&Materials["Black"]);
-    }
-
-    RenderObjects["ndotvCow"] = RenderObject(cow1);
-    {
-        auto transform = RenderObjects["ndotvCow"].get_transform();
-        //transform->set_translate(glm::vec3(0.0f, -10.0f, -40.0f));
-        //transform->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
-    }
-    {
-        RenderObjects["ndotvCow"].set_material(&Materials["ndotv"]);
-    }
-
-    RenderObjects["SilhouetteCow"] = RenderObject(cow2);
-    {
-        auto transform = RenderObjects["SilhouetteCow"].get_transform();
-        transform->set_translate(glm::vec3(2.0f, 0.0f, 0.0f));
-        //transform->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
-    }
-    {
-        RenderObjects["SilhouetteCow"].set_material(&Materials["Silhouettes"]);
-    }
-
     RenderObjects["SilhouettesGaussianBlurCow"] = RenderObject(cow3);
     {
         auto transform = RenderObjects["SilhouettesGaussianBlurCow"].get_transform();
-        transform->set_translate(glm::vec3(4.0f, 0.0f, 0.0f));
-        //transform->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
+        transform->set_translate(glm::vec3(0.0f, 0.0f, -5.0f));
+        transform->set_rotate(glm::vec3(0.0f, 180.0f, 0.0f));
     }
     {
         RenderObjects["SilhouettesGaussianBlurCow"].set_material(&Materials["SilhouettesGaussianBlur"]);
@@ -153,15 +126,31 @@ int main()
 
         processInput(window);
 
-        //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
 
         {
-            RenderObjects["SilhouettesGaussianBlurCow"].silhouetteGaussianBlurRender(camera);
-
-            //RenderObjects["Cow"].render(camera);
-            //RenderObjects["ndotvCow"].ndotvRender(camera);
-            //RenderObjects["SilhouetteCow"].silhouetteRender(camera);
+            if (HowToRender == 1)
+            {
+                RenderObjects["SilhouettesGaussianBlurCow"].set_material(&Materials["ndotv"]);
+                RenderObjects["SilhouettesGaussianBlurCow"].ndotvRender(camera);
+            }
+            else if (HowToRender == 2)
+            {
+                RenderObjects["SilhouettesGaussianBlurCow"].set_material(&Materials["Silhouettes"]);
+                RenderObjects["SilhouettesGaussianBlurCow"].silhouetteRender(camera);
+            }
+            else if (HowToRender == 3)
+            {
+                RenderObjects["SilhouettesGaussianBlurCow"].set_material(&Materials["SilhouettesGaussianBlur"]);
+                RenderObjects["SilhouettesGaussianBlurCow"].silhouetteGaussianBlurRender(camera);
+            }
+            else
+            {
+                RenderObjects["SilhouettesGaussianBlurCow"].set_material(&Materials["Magenta"]);
+                RenderObjects["SilhouettesGaussianBlurCow"].render(camera);
+            }
         }
 
         glfwSwapBuffers(window);
@@ -191,32 +180,17 @@ void processInput(GLFWwindow *window)
 
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
     {
-        for (auto& elem : RenderObjects)
-        {
-            if (elem.first == "Cow") continue;
-
-            elem.second.set_material(&Materials["Black"]);
-        }
+        HowToRender = 1;
     }
 
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
     {
-        for (auto& elem : RenderObjects)
-        {
-            if (elem.first == "Cow") continue;
-
-            elem.second.set_material(&Materials["Magenta"]);
-        }
+        HowToRender = 2;
     }
 
     if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
     {
-        for (auto& elem : RenderObjects)
-        {
-            if (elem.first == "Cow") continue;
-
-            elem.second.set_material(&Materials["Orange"]);
-        }
+        HowToRender = 3;
     }
 }
 
@@ -251,8 +225,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
         for (auto& elem : RenderObjects)
         {
-            if (elem.first == "Cow") continue;
-
             auto rotate = elem.second.get_transform()->get_rotate();
             rotate.x -= yoffset;
             rotate.y += xoffset;
