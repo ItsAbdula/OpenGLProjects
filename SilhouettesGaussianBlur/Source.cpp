@@ -70,30 +70,13 @@ int main()
         glEnable(GL_DEPTH_TEST);
     }
 
-    //auto transparent = ResourceManager::getInstance().loadImage("transparent.png");
-
     auto cow = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
-    //auto cow1 = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
-    //auto cow2 = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
-    //auto cow3 = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
-    //auto cube = Mesh(ResourceManager::getInstance().loadModel("cube.obj"));
-    //auto plane = Mesh(ResourceManager::getInstance().loadModel("plane.obj"));
-    //auto sphere = Mesh(ResourceManager::getInstance().loadModel("sphere.obj"));
-    //auto teapot = Mesh(ResourceManager::getInstance().loadModel("teapot.obj"));
 
-    //auto renderObject = build_program("RenderObject");
-    //auto lighting = build_program("Lighting_Specular");
-    //auto lamp = build_program("Lighting_Lamp");
-    //auto textureProgram = build_program("Texture");
     auto lightmap = build_program("Lighting_Maps");
     auto ndotv = build_program("ndotv");
     auto silhouettes = build_program("Silhouettes");
     auto silhouettesGaussianBlur = build_program("SilhouettesGaussianBlur");
 
-    //Materials["Black"] = Material(lightmap, ResourceManager::getInstance().loadImage("black.png"), transparent);
-    //Materials["Orange"] = Material(lightmap, ResourceManager::getInstance().loadImage("orange.png"), transparent);
-    //Materials["White"] = Material(lightmap, ResourceManager::getInstance().loadImage("white.png"), transparent);
-    //Materials["Magenta"] = Material(lightmap, ResourceManager::getInstance().loadImage("magenta.png"), transparent);
     Materials["ndotv"] = Material(ndotv, 0, 0);
     Materials["Silhouettes"] = Material(silhouettes, 0, 0);
     Materials["SilhouettesGaussianBlur"] = Material(silhouettesGaussianBlur, 0, 0);
