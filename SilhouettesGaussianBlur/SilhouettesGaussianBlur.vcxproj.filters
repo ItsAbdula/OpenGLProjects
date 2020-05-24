@@ -109,5 +109,11 @@
     <None Include="..\Shaders\ndotv.vert">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="..\Shaders\SilhouettesGaussianBlur.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\SilhouettesGaussianBlur.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

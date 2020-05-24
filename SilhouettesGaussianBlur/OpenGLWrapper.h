@@ -36,10 +36,15 @@ public:
     void ndotvRender(Camera & camera);
     void projective_render(Camera &camera, Camera &projector);
     void silhouetteRender(Camera &camera);
+    void silhouetteGaussianBlurRender(Camera & camera);
 };
 
 GLint compile_shader(const GLint shaderType, const std::string *shaderSource);
 void compile_shaders(std::vector<GLint> *shaderIDs, const std::string *shaderSources);
+float gauss(float x, float sigma2);
+void setupQuad();
+void setupFBO();
+void setupGaussianBlurUniforms(GLuint programID);
 GLuint build_program(const std::string name);
 
 void set_uniform_value(GLuint &prog, const char *name, glm::vec1 value);

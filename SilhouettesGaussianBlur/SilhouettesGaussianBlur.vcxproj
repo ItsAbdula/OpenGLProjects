@@ -166,6 +166,8 @@
     <None Include="..\Shaders\RenderObject.vert" />
     <None Include="..\Shaders\Silhouettes.frag" />
     <None Include="..\Shaders\Silhouettes.vert" />
+    <None Include="..\Shaders\SilhouettesGaussianBlur.frag" />
+    <None Include="..\Shaders\SilhouettesGaussianBlur.vert" />
     <None Include="..\Shaders\simpleShader.frag" />
     <None Include="..\Shaders\simpleShader.vert" />
   </ItemGroup>

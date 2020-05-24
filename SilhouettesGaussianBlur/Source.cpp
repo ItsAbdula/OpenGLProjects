@@ -39,8 +39,8 @@ std::map<std::string, Material> Materials;
 int main()
 {
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "201421062_ChoiWooHyung", NULL, NULL);
@@ -74,6 +74,7 @@ int main()
     auto cow = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
     auto cow1 = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
     auto cow2 = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
+    auto cow3 = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
     auto cube = Mesh(ResourceManager::getInstance().loadModel("cube.obj"));
     auto plane = Mesh(ResourceManager::getInstance().loadModel("plane.obj"));
     auto sphere = Mesh(ResourceManager::getInstance().loadModel("sphere.obj"));
@@ -86,6 +87,7 @@ int main()
     auto textureProgram = build_program("Texture");
     auto ndotv = build_program("ndotv");
     auto silhouettes = build_program("Silhouettes");
+    auto silhouettesGaussianBlur = build_program("SilhouettesGaussianBlur");
 
     Materials["Black"] = Material(lightmap, ResourceManager::getInstance().loadImage("black.png"), transparent);
     Materials["Magenta"] = Material(lightmap, ResourceManager::getInstance().loadImage("magenta.png"), transparent);
@@ -93,6 +95,7 @@ int main()
     Materials["White"] = Material(lightmap, ResourceManager::getInstance().loadImage("white.png"), transparent);
     Materials["ndotv"] = Material(ndotv, 0, 0);
     Materials["Silhouettes"] = Material(silhouettes, 0, 0);
+    Materials["SilhouettesGaussianBlur"] = Material(silhouettesGaussianBlur, 0, 0);
 
     RenderObjects["Cow"] = RenderObject(cow);
     {
@@ -124,6 +127,24 @@ int main()
         RenderObjects["SilhouetteCow"].set_material(&Materials["Silhouettes"]);
     }
 
+    RenderObjects["SilhouettesGaussianBlurCow"] = RenderObject(cow3);
+    {
+        auto transform = RenderObjects["SilhouettesGaussianBlurCow"].get_transform();
+        transform->set_translate(glm::vec3(4.0f, 0.0f, 0.0f));
+        //transform->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
+    }
+    {
+        RenderObjects["SilhouettesGaussianBlurCow"].set_material(&Materials["SilhouettesGaussianBlur"]);
+
+        glUseProgram(Materials["SilhouettesGaussianBlur"].getProgramID());
+
+        setupFBO();
+        setupQuad();
+        setupGaussianBlurUniforms(Materials["SilhouettesGaussianBlur"].getProgramID());
+
+        glUseProgram(0);
+    }
+
     while (!glfwWindowShouldClose(window))
     {
         double currentFrame = glfwGetTime();
@@ -132,13 +153,15 @@ int main()
 
         processInput(window);
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         {
-            RenderObjects["Cow"].render(camera);
-            RenderObjects["ndotvCow"].ndotvRender(camera);
-            RenderObjects["SilhouetteCow"].silhouetteRender(camera);
+            RenderObjects["SilhouettesGaussianBlurCow"].silhouetteGaussianBlurRender(camera);
+
+            //RenderObjects["Cow"].render(camera);
+            //RenderObjects["ndotvCow"].ndotvRender(camera);
+            //RenderObjects["SilhouetteCow"].silhouetteRender(camera);
         }
 
         glfwSwapBuffers(window);
