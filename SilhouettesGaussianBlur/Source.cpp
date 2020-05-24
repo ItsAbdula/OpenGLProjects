@@ -39,6 +39,12 @@ std::map<std::string, Material> Materials;
 
 int main()
 {
+    string filePath = "";
+    {
+        std::cout << "Please enter the path of input file. : " << std::endl;
+        std::cin >> filePath;
+    }
+
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
@@ -66,11 +72,7 @@ int main()
         return -1;
     }
 
-    {
-        glEnable(GL_DEPTH_TEST);
-    }
-
-    auto cow = Mesh(ResourceManager::getInstance().loadModel("spot_triangulated.obj"));
+    auto cow = Mesh(ResourceManager::getInstance().loadModelFromPath(filePath));
 
     auto lightmap = build_program("Lighting_Maps");
     auto ndotv = build_program("ndotv");

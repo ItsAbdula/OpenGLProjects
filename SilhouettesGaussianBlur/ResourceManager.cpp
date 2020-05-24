@@ -4,7 +4,7 @@
 
 #include "ResourceManager.h"
 
-MeshData *ResourceManager::loadModel(const std::string &name)
+MeshData* ResourceManager::loadModel(const std::string &name)
 {
     auto path = std::string("../Resources/Models/" + name);
 
@@ -21,7 +21,22 @@ MeshData *ResourceManager::loadModel(const std::string &name)
     return mesh;
 }
 
-Image *ResourceManager::makeImage(std::string fileName, int *width, int *height, int *nrChannels)
+MeshData* ResourceManager::loadModelFromPath(const std::string &path)
+{
+    Assimp::Importer importer;
+    const aiScene* pScene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals |
+        aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
+    if (pScene == NULL)
+    {
+        std::cerr << importer.GetErrorString() << std::endl;
+    }
+
+    auto mesh = new MeshData(pScene);
+
+    return mesh;
+}
+
+Image* ResourceManager::makeImage(std::string fileName, int *width, int *height, int *nrChannels)
 {
     fileName = "../Resources/Images/" + fileName;
     stbi_set_flip_vertically_on_load(true);
