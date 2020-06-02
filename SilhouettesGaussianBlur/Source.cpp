@@ -86,8 +86,8 @@ int main()
     RenderObjects["SilhouettesGaussianBlurCow"] = RenderObject(cow);
     {
         auto transform = RenderObjects["SilhouettesGaussianBlurCow"].getTransform();
-        transform->set_translate(glm::vec3(0.0f, 0.0f, -5.0f));
-        transform->set_rotate(glm::vec3(0.0f, 180.0f, 0.0f));
+        transform->setTransform(glm::vec3(0.0f, 0.0f, -5.0f));
+        transform->setRotate(glm::vec3(0.0f, 180.0f, 0.0f));
     }
     {
         RenderObjects["SilhouettesGaussianBlurCow"].setMaterial(&Materials["SilhouettesGaussianBlur"]);
@@ -202,7 +202,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
             rotate.x -= yoffset;
             rotate.y += xoffset;
 
-            elem.second.getTransform()->set_rotate(rotate);
+            elem.second.getTransform()->setRotate(rotate);
         }
     }
 }

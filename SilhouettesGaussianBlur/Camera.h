@@ -34,24 +34,24 @@ public:
 
     Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
     {
-        transform.set_translate(position);
+        transform.setTransform(position);
 
         WorldUp = up;
         Yaw = yaw;
         Pitch = pitch;
 
-        transform.set_rotate(glm::vec3(PITCH, YAW, 0));
+        transform.setRotate(glm::vec3(PITCH, YAW, 0));
     }
 
     Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
     {
-        transform.set_translate(glm::vec3(posX, posY, posZ));
+        transform.setTransform(glm::vec3(posX, posY, posZ));
 
         WorldUp = glm::vec3(upX, upY, upZ);
         Yaw = yaw;
         Pitch = pitch;
 
-        transform.set_rotate(glm::vec3(PITCH, YAW, 0));
+        transform.setRotate(glm::vec3(PITCH, YAW, 0));
     }
 
     glm::mat4 GetViewMatrix()
@@ -63,13 +63,13 @@ public:
     {
         float velocity = MovementSpeed * deltaTime;
         if (direction == FORWARD)
-            transform.set_translate(transform.get_translate() += transform.get_front() * velocity);
+            transform.setTransform(transform.get_translate() += transform.get_front() * velocity);
         if (direction == BACKWARD)
-            transform.set_translate(transform.get_translate() -= transform.get_front() * velocity);
+            transform.setTransform(transform.get_translate() -= transform.get_front() * velocity);
         if (direction == LEFT)
-            transform.set_translate(transform.get_translate() -= transform.get_right() * velocity);
+            transform.setTransform(transform.get_translate() -= transform.get_right() * velocity);
         if (direction == RIGHT)
-            transform.set_translate(transform.get_translate() += transform.get_right() * velocity);
+            transform.setTransform(transform.get_translate() += transform.get_right() * velocity);
     }
 
     void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true)
@@ -87,7 +87,7 @@ public:
             if (Pitch < -89.0f)
                 Pitch = -89.0f;
         }
-        transform.set_rotate(glm::vec3(Pitch, Yaw, 0));
+        transform.setRotate(glm::vec3(Pitch, Yaw, 0));
     }
 
     void ProcessMouseScroll(float yoffset)

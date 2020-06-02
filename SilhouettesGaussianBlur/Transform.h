@@ -24,8 +24,8 @@ public:
     glm::vec3 get_translate();
     glm::vec3 get_rotate();
     glm::vec3 get_scale();
-    void set_translate(glm::vec3 _translate);
-    void set_rotate(glm::vec3 _rotate);
+    void setTransform(glm::vec3 _translate);
+    void setRotate(glm::vec3 _rotate);
     void set_scale(glm::vec3 _scale);
 
     glm::vec3 get_front();
