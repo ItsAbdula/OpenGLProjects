@@ -6,6 +6,11 @@ using namespace std;
 
 static Assimp::Importer importer;
 
+bool FileSystem::isExist(const string &path)
+{
+    return ifstream(path).good();
+}
+
 string FileSystem::getExtension(const string &filePath)
 {
     return filePath.substr(filePath.find_last_of(".") + 1);
@@ -13,23 +18,14 @@ string FileSystem::getExtension(const string &filePath)
 
 string FileSystem::readFile(const string &path)
 {
-    string contents;
-
     ifstream fileStream(path);
-    if (fileStream.is_open() == false)
-    {
-        cerr << "Can't open : " << path << endl;
-
-        return contents;
-    }
 
     stringstream buffer;
     buffer << fileStream.rdbuf();
-    contents = buffer.str();
 
     fileStream.close();
 
-    return contents;
+    return buffer.str();
 }
 
 string FileSystem::readShader(const string &name)
