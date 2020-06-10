@@ -21,13 +21,13 @@ glm::vec3 Transform::get_scale()
 {
     return scale;
 }
-void Transform::set_translate(glm::vec3 _translate)
+void Transform::setTransform(glm::vec3 _translate)
 {
     translate = _translate;
 
     update_directional_vector();
 }
-void Transform::set_rotate(glm::vec3 _rotate)
+void Transform::setRotate(glm::vec3 _rotate)
 {
     rotate = _rotate;
 

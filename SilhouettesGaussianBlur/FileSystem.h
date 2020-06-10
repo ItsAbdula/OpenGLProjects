@@ -16,6 +16,7 @@ class FileSystem
 public:
     static bool isExist(const string &path);
     static string getExtension(const string &filePath);
+    bool isExist(const string &filePath);
     static string readFile(const string &path);
     static string readShader(const string &name);
 

@@ -16,6 +16,19 @@ string FileSystem::getExtension(const string &filePath)
     return filePath.substr(filePath.find_last_of(".") + 1);
 }
 
+bool FileSystem::isExist(const string &filePath)
+{
+    ifstream fileStream(filePath);
+    if (fileStream.is_open() == false)
+    {
+        cerr << "Can't open : " << filePath << endl;
+
+        return false;
+    }
+
+    return true;
+}
+
 string FileSystem::readFile(const string &path)
 {
     ifstream fileStream(path);

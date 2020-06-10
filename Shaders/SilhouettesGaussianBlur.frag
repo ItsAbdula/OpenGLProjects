@@ -36,14 +36,11 @@ vec4 pass2()
     ivec2 pix = ivec2(gl_FragCoord.xy);
     vec4 sum = texelFetch(Texture0, pix, 0) * Weight[0];
 
-    sum += texelFetchOffset( Texture0, pix, 0, ivec2(0,1) ) * Weight[1];
-    sum += texelFetchOffset( Texture0, pix, 0, ivec2(0,-1) ) * Weight[1];
-    sum += texelFetchOffset( Texture0, pix, 0, ivec2(0,2) ) * Weight[2];
-    sum += texelFetchOffset( Texture0, pix, 0, ivec2(0,-2) ) * Weight[2];
-    sum += texelFetchOffset( Texture0, pix, 0, ivec2(0,3) ) * Weight[3];
-    sum += texelFetchOffset( Texture0, pix, 0, ivec2(0,-3) ) * Weight[3];
-    sum += texelFetchOffset( Texture0, pix, 0, ivec2(0,4) ) * Weight[4];
-    sum += texelFetchOffset( Texture0, pix, 0, ivec2(0,-4) ) * Weight[4];
+	for(int i = 1; i <= 4; i++)
+	{
+		sum += texelFetchOffset(Texture0, pix, 0, ivec2(0,i)) * Weight[i];
+		sum += texelFetchOffset(Texture0, pix, 0, ivec2(0,-i)) * Weight[i];
+	}
 
     return sum;
 }
@@ -53,14 +50,11 @@ vec4 pass3()
     ivec2 pix = ivec2(gl_FragCoord.xy);
     vec4 sum = texelFetch(Texture0, pix, 0) * Weight[0];
 
-    sum += texelFetchOffset( Texture0, pix, 0, ivec2(1,0) ) * Weight[1];
-    sum += texelFetchOffset( Texture0, pix, 0, ivec2(-1,0) ) * Weight[1];
-    sum += texelFetchOffset( Texture0, pix, 0, ivec2(2,0) ) * Weight[2];
-    sum += texelFetchOffset( Texture0, pix, 0, ivec2(-2,0) ) * Weight[2];
-    sum += texelFetchOffset( Texture0, pix, 0, ivec2(3,0) ) * Weight[3];
-    sum += texelFetchOffset( Texture0, pix, 0, ivec2(-3,0) ) * Weight[3];
-    sum += texelFetchOffset( Texture0, pix, 0, ivec2(4,0) ) * Weight[4];
-    sum += texelFetchOffset( Texture0, pix, 0, ivec2(-4,0) ) * Weight[4];
+	for(int i = 1; i <= 4; i++)
+	{
+	    sum += texelFetchOffset(Texture0, pix, 0, ivec2(i,0)) * Weight[i];
+		sum += texelFetchOffset(Texture0, pix, 0, ivec2(-i,0)) * Weight[i];
+	}
 
     return sum;
 }
