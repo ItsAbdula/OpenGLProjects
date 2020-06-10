@@ -115,5 +115,14 @@
     <None Include="..\Shaders\SilhouettesGaussianBlur.vert">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="SilhouettesGeometry.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="SilhouettesGeometry.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="SilhouettesGeometry.geom">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

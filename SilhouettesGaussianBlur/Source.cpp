@@ -43,6 +43,11 @@ int main()
     {
         std::cout << "Please enter the path of input file." << std::endl;
         std::cin >> filePath;
+        if (FileSystem::isExist(filePath) == false)
+        {
+            std::cerr << "Can't find" + filePath << std::endl;
+            return -1;
+        }
     }
 
     glfwInit();
@@ -193,6 +198,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
         glfwGetWindowSize(window, &width, &height);
         double xoffset = ((xpos - lastX) / (height) * 180);
         double yoffset = ((lastY - ypos) / (width) * 180);
+
         lastX = xpos;
         lastY = ypos;
 
