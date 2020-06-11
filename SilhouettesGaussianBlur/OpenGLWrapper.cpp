@@ -457,15 +457,15 @@ GLuint buildProgram(const std::string name)
 std::vector<GLint> compileShaders(const std::string *shaderSources)
 {
     auto shaderIDs = std::vector<GLint>();
-    if (shaderSources[0].compare("") == false)
+    if (shaderSources[0] != "")
     {
         shaderIDs.push_back(compileShader(GL_VERTEX_SHADER, &shaderSources[0]));
     }
-    if (shaderSources[1].compare("") == false)
+    if (shaderSources[1] != "")
     {
         shaderIDs.push_back(compileShader(GL_FRAGMENT_SHADER, &shaderSources[1]));
     }
-    if (shaderSources[2].compare("") == false)
+    if (shaderSources[2] != "")
     {
         shaderIDs.push_back(compileShader(GL_GEOMETRY_SHADER, &shaderSources[2]));
     }
