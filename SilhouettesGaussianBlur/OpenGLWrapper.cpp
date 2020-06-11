@@ -155,6 +155,11 @@ void RenderObject::silhouetteRender(Camera &camera)
     glUseProgram(0);
 }
 
+void RenderObject::silhouetteGeometryRender(Camera &camera)
+{
+//TODO:
+}
+
 float gauss(float x, float sigma2)
 {
     double coeff = 1.0 / (glm::two_pi<double>() * sigma2);
@@ -261,6 +266,11 @@ void setupFBO()
 
     // Unbind the framebuffer, and revert to default framebuffer
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void setupSilhouettesGeometry(GLuint programID)
+{
+//TODO:
 }
 
 void setupGaussianBlurUniforms(GLuint programID)

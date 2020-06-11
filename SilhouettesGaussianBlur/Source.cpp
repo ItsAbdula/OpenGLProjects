@@ -81,27 +81,23 @@ int main()
 
     auto lightmap = buildProgram("Lighting_Maps");
     auto ndotv = buildProgram("ndotv");
-    auto silhouettes = buildProgram("Silhouettes");
-    auto silhouettesGaussianBlur = buildProgram("SilhouettesGaussianBlur");
+    auto silhouettesGeometry = buildProgram("SilhouettesGeometry");
 
     Materials["ndotv"] = Material(ndotv, 0, 0);
-    Materials["Silhouettes"] = Material(silhouettes, 0, 0);
-    Materials["SilhouettesGaussianBlur"] = Material(silhouettesGaussianBlur, 0, 0);
+    Materials["SilhouettesGeometry"] = Material(silhouettesGeometry, 0, 0);
 
-    RenderObjects["SilhouettesGaussianBlurCow"] = RenderObject(cow);
+    RenderObjects["SilhouettesGeometryCow"] = RenderObject(cow);
     {
-        auto transform = RenderObjects["SilhouettesGaussianBlurCow"].getTransform();
+        auto transform = RenderObjects["SilhouettesGeometryCow"].getTransform();
         transform->setTransform(glm::vec3(0.0f, 0.0f, -5.0f));
         transform->setRotate(glm::vec3(0.0f, 180.0f, 0.0f));
     }
     {
-        RenderObjects["SilhouettesGaussianBlurCow"].setMaterial(&Materials["SilhouettesGaussianBlur"]);
+        RenderObjects["SilhouettesGeometryCow"].setMaterial(&Materials["SilhouettesGeometry"]);
 
-        glUseProgram(Materials["SilhouettesGaussianBlur"].getProgramID());
+        glUseProgram(Materials["SilhouettesGeometry"].getProgramID());
 
-        setupFBO();
-        setupQuad();
-        setupGaussianBlurUniforms(Materials["SilhouettesGaussianBlur"].getProgramID());
+        setupSilhouettesGeometry(Materials["SilhouettesGeometry"].getProgramID());
 
         glUseProgram(0);
     }
@@ -121,18 +117,13 @@ int main()
         {
             if (HowToRender == 1)
             {
-                RenderObjects["SilhouettesGaussianBlurCow"].setMaterial(&Materials["ndotv"]);
-                RenderObjects["SilhouettesGaussianBlurCow"].ndotvRender(camera);
+                RenderObjects["SilhouettesGeometryCow"].setMaterial(&Materials["ndotv"]);
+                RenderObjects["SilhouettesGeometryCow"].ndotvRender(camera);
             }
             else if (HowToRender == 2)
             {
-                RenderObjects["SilhouettesGaussianBlurCow"].setMaterial(&Materials["Silhouettes"]);
-                RenderObjects["SilhouettesGaussianBlurCow"].silhouetteRender(camera);
-            }
-            else if (HowToRender == 3)
-            {
-                RenderObjects["SilhouettesGaussianBlurCow"].setMaterial(&Materials["SilhouettesGaussianBlur"]);
-                RenderObjects["SilhouettesGaussianBlurCow"].silhouetteGaussianBlurRender(camera);
+                RenderObjects["SilhouettesGeometryCow"].setMaterial(&Materials["SilhouettesGeometry"]);
+                RenderObjects["SilhouettesGeometryCow"].silhouetteGeometryRender(camera);
             }
         }
 
@@ -169,11 +160,6 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
     {
         HowToRender = 2;
-    }
-
-    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
-    {
-        HowToRender = 3;
     }
 }
 
