@@ -270,13 +270,15 @@ void setupGaussianBlurUniforms(GLuint programID)
     // Compute and sum the weights
     weights[0] = gauss(0, sigma2);
     sum = weights[0];
-    for (int i = 1; i < 5; i++) {
+    for (int i = 1; i < 5; i++)
+    {
         weights[i] = gauss(float(i), sigma2);
         sum += 2 * weights[i];
     }
 
     // Normalize the weights and set the uniform
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++)
+    {
         std::stringstream uniName;
         uniName << "Weight[" << i << "]";
         float val = weights[i] / sum;
@@ -422,12 +424,21 @@ void RenderObject::projectiveRender(Camera &camera, Camera &projector)
 
 GLuint buildProgram(const std::string name)
 {
-    std::string shaderSources[5];
-    shaderSources[0] = FileSystem::readShader("../Shaders/" + name + ".vert");
-    shaderSources[1] = FileSystem::readShader("../Shaders/" + name + ".frag");
+    std::string shaderSources[5] = { "", "", "", "", "" };
+    if (FileSystem::isExist("../Shaders/" + name + ".vert"))
+    {
+        shaderSources[0] = FileSystem::readShader("../Shaders/" + name + ".vert");
+    }
+    if (FileSystem::isExist("../Shaders/" + name + ".frag"))
+    {
+        shaderSources[1] = FileSystem::readShader("../Shaders/" + name + ".frag");
+    }
+    if (FileSystem::isExist("../Shaders/" + name + ".geom"))
+    {
+        shaderSources[2] = FileSystem::readShader("../Shaders/" + name + ".geom");
+    }
 
-    std::vector<GLint> shaderIDs;
-    compileShaders(&shaderIDs, shaderSources);
+    auto shaderIDs = compileShaders(shaderSources);
 
     auto programID = glCreateProgram();
     for (const auto &i : shaderIDs)
@@ -443,10 +454,23 @@ GLuint buildProgram(const std::string name)
     return programID;
 }
 
-void compileShaders(std::vector<GLint> *shaderIDs, const std::string *shaderSources)
+std::vector<GLint> compileShaders(const std::string *shaderSources)
 {
-    shaderIDs->push_back(compileShader(GL_VERTEX_SHADER, &shaderSources[0]));
-    shaderIDs->push_back(compileShader(GL_FRAGMENT_SHADER, &shaderSources[1]));
+    auto shaderIDs = std::vector<GLint>();
+    if (shaderSources[0].compare("") == false)
+    {
+        shaderIDs.push_back(compileShader(GL_VERTEX_SHADER, &shaderSources[0]));
+    }
+    if (shaderSources[1].compare("") == false)
+    {
+        shaderIDs.push_back(compileShader(GL_FRAGMENT_SHADER, &shaderSources[1]));
+    }
+    if (shaderSources[2].compare("") == false)
+    {
+        shaderIDs.push_back(compileShader(GL_GEOMETRY_SHADER, &shaderSources[2]));
+    }
+
+    return shaderIDs;
 }
 
 GLint compileShader(const GLint shaderType, const std::string *shaderSource)
@@ -456,6 +480,7 @@ GLint compileShader(const GLint shaderType, const std::string *shaderSource)
     {
     case (GL_VERTEX_SHADER): shaderID = glCreateShader(GL_VERTEX_SHADER); break;
     case (GL_FRAGMENT_SHADER): shaderID = glCreateShader(GL_FRAGMENT_SHADER); break;
+    case (GL_GEOMETRY_SHADER): shaderID = glCreateShader(GL_GEOMETRY_SHADER); break;
     default:
         GLchar infoLog[512];
         std::cerr << infoLog << "SHADER::CAN'T_FIND_SHADER_TYPE" << std::endl;

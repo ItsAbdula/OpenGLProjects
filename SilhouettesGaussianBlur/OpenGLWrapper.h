@@ -40,7 +40,7 @@ public:
 };
 
 GLint compileShader(const GLint shaderType, const std::string *shaderSource);
-void compileShaders(std::vector<GLint> *shaderIDs, const std::string *shaderSources);
+std::vector<GLint> compileShaders(const std::string *shaderSources);
 float gauss(float x, float sigma2);
 void setupQuad();
 void setupFBO();
