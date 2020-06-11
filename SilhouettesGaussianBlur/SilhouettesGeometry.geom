@@ -1,7 +1,7 @@
-#version 400
+#version 420
 
-layout( triangles_adjacency ) in;
-layout( triangle_strip, max_vertices = 15 ) out;
+layout(triangles_adjacency) in;
+layout(triangle_strip, max_vertices = 15) out;
 
 out vec3 GNormal;
 out vec3 GPosition;
@@ -15,13 +15,13 @@ in vec3 VPosition[];
 uniform float EdgeWidth;
 uniform float PctExtend;
 
-bool isFrontFacing( vec3 a, vec3 b, vec3 c )
+bool isFrontFacing(vec3 a, vec3 b, vec3 c)
 {
     return ((a.x * b.y - b.x * a.y) + (b.x * c.y - c.x * b.y) + (c.x * a.y - a.x * c.y))
             > 0;
 }
 
-void emitEdgeQuad( vec3 e0, vec3 e1 )
+void emitEdgeQuad(vec3 e0, vec3 e1)
 {
     vec2 ext = PctExtend * (e1.xy - e0.xy);
     vec2 v = normalize(e1.xy - e0.xy);
