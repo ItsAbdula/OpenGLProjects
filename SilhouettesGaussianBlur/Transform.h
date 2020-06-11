@@ -16,23 +16,23 @@ private:
     glm::vec3 up;
     glm::vec3 right;
 
-    void update_directional_vector();
+    void updateDirectionalVector();
 
 public:
     Transform();
 
-    glm::vec3 get_translate();
-    glm::vec3 get_rotate();
-    glm::vec3 get_scale();
+    glm::vec3 getTranslate();
+    glm::vec3 getRotate();
+    glm::vec3 getScale();
     void setTransform(glm::vec3 _translate);
     void setRotate(glm::vec3 _rotate);
-    void set_scale(glm::vec3 _scale);
+    void setScale(glm::vec3 _scale);
 
-    glm::vec3 get_front();
-    glm::vec3 get_up();
-    glm::vec3 get_right();
+    glm::vec3 getFront();
+    glm::vec3 getUp();
+    glm::vec3 getRight();
 
-    glm::mat4 get_model_matrix();
+    glm::mat4 getModelMatrix();
 
     void move(glm::vec3 _delta);
     void move(glm::vec3 _direction, glm::vec1 _velocity);

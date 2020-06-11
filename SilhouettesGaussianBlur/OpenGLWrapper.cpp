@@ -52,7 +52,7 @@ void RenderObject::render(Camera &camera)
     auto prog = material->getProgramID();
     glUseProgram(prog);
 
-    auto viewPos = camera.transform.get_translate();
+    auto viewPos = camera.transform.getTranslate();
 
     setUniformValue(prog, "light.position", _lightPos);
     setUniformValue(prog, "viewPos", viewPos);
@@ -68,7 +68,7 @@ void RenderObject::render(Camera &camera)
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
     glm::mat4 view = camera.GetViewMatrix();
-    glm::mat4 model = transform.get_model_matrix();
+    glm::mat4 model = transform.getModelMatrix();
 
     setUniformValue(prog, "projection", projection);
     setUniformValue(prog, "view", view);
@@ -94,13 +94,13 @@ void RenderObject::ndotvRender(Camera &camera)
     auto prog = material->getProgramID();
     glUseProgram(prog);
 
-    auto viewPos = camera.transform.get_translate();
+    auto viewPos = camera.transform.getTranslate();
 
     setUniformValue(prog, "viewPos", viewPos);
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
     glm::mat4 view = camera.GetViewMatrix();
-    glm::mat4 model = transform.get_model_matrix();
+    glm::mat4 model = transform.getModelMatrix();
 
     setUniformValue(prog, "projection", projection);
     setUniformValue(prog, "view", view);
@@ -126,13 +126,13 @@ void RenderObject::silhouetteRender(Camera &camera)
     auto prog = material->getProgramID();
     glUseProgram(prog);
 
-    auto viewPos = camera.transform.get_translate();
+    auto viewPos = camera.transform.getTranslate();
 
     setUniformValue(prog, "viewPos", viewPos);
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
     glm::mat4 view = camera.GetViewMatrix();
-    glm::mat4 model = transform.get_model_matrix();
+    glm::mat4 model = transform.getModelMatrix();
 
     setUniformValue(prog, "projection", projection);
     setUniformValue(prog, "view", view);
@@ -299,12 +299,12 @@ void RenderObject::silhouetteGaussianBlurRender(Camera &camera)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
-    auto viewPos = camera.transform.get_translate();
+    auto viewPos = camera.transform.getTranslate();
     setUniformValue(prog, "viewPos", viewPos);
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
     glm::mat4 view = camera.GetViewMatrix();
-    glm::mat4 model = transform.get_model_matrix();
+    glm::mat4 model = transform.getModelMatrix();
 
     setUniformValue(prog, "projection", projection);
     setUniformValue(prog, "view", view);
@@ -367,13 +367,13 @@ void RenderObject::projectiveRender(Camera &camera, Camera &projector)
                             0.0f, 0.0f, 0.5f, 0.5f,
                             0.0f, 0.0f, 0.0f, 1.0f };
 
-    glm::mat4 projector_view = glm::lookAt(projector.transform.get_translate(), projector.transform.get_translate() + projector.transform.get_front(), projector.transform.get_up());
+    glm::mat4 projector_view = glm::lookAt(projector.transform.getTranslate(), projector.transform.getTranslate() + projector.transform.getFront(), projector.transform.getUp());
     glm::mat4 projector_projection = glm::perspective(glm::radians(projector.Zoom), 1.0f, 0.1f, 100.0f);
 
     auto prog = material->getProgramID();
     glUseProgram(prog);
 
-    auto viewPos = camera.transform.get_translate();
+    auto viewPos = camera.transform.getTranslate();
 
     setUniformValue(prog, "light.position", _lightPos);
     setUniformValue(prog, "viewPos", viewPos);
@@ -389,7 +389,7 @@ void RenderObject::projectiveRender(Camera &camera, Camera &projector)
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
     glm::mat4 view = camera.GetViewMatrix();
-    glm::mat4 model = transform.get_model_matrix();
+    glm::mat4 model = transform.getModelMatrix();
 
     setUniformValue(prog, "projectorBias", bias);
     setUniformValue(prog, "projectorProjection", projector_projection);

@@ -56,20 +56,20 @@ public:
 
     glm::mat4 GetViewMatrix()
     {
-        return glm::lookAt(transform.get_translate(), transform.get_translate() + transform.get_front(), transform.get_up());
+        return glm::lookAt(transform.getTranslate(), transform.getTranslate() + transform.getFront(), transform.getUp());
     }
 
     void ProcessKeyboard(Camera_Movement direction, float deltaTime)
     {
         float velocity = MovementSpeed * deltaTime;
         if (direction == FORWARD)
-            transform.setTransform(transform.get_translate() += transform.get_front() * velocity);
+            transform.setTransform(transform.getTranslate() += transform.getFront() * velocity);
         if (direction == BACKWARD)
-            transform.setTransform(transform.get_translate() -= transform.get_front() * velocity);
+            transform.setTransform(transform.getTranslate() -= transform.getFront() * velocity);
         if (direction == LEFT)
-            transform.setTransform(transform.get_translate() -= transform.get_right() * velocity);
+            transform.setTransform(transform.getTranslate() -= transform.getRight() * velocity);
         if (direction == RIGHT)
-            transform.setTransform(transform.get_translate() += transform.get_right() * velocity);
+            transform.setTransform(transform.getTranslate() += transform.getRight() * velocity);
     }
 
     void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true)

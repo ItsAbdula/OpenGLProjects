@@ -204,7 +204,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
         for (auto& elem : RenderObjects)
         {
-            auto rotate = elem.second.getTransform()->get_rotate();
+            auto rotate = elem.second.getTransform()->getRotate();
             rotate.x -= yoffset;
             rotate.y += xoffset;
 
