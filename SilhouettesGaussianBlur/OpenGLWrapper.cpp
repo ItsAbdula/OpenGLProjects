@@ -157,7 +157,24 @@ void RenderObject::silhouetteRender(Camera &camera)
 
 void RenderObject::silhouetteGeometryRender(Camera &camera)
 {
-//TODO:
+    auto prog = material->getProgramID();
+    glUseProgram(prog);
+
+    auto viewPos = camera.transform.getTranslate();
+
+    setUniformValue(prog, "viewPos", viewPos);
+
+    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
+    glm::mat4 view = camera.GetViewMatrix();
+    glm::mat4 model = transform.getModelMatrix();
+
+    setUniformValue(prog, "projection", projection);
+    setUniformValue(prog, "view", view);
+    setUniformValue(prog, "model", model);
+
+    drawMesh(mesh);
+
+    glUseProgram(0);
 }
 
 float gauss(float x, float sigma2)
@@ -270,7 +287,9 @@ void setupFBO()
 
 void setupSilhouettesGeometry(GLuint programID)
 {
-//TODO:
+    setUniformValue(programID, "EdgeWidth", glm::fvec1(0.015f));
+    setUniformValue(programID, "PctExtend", glm::fvec1(0.25f));
+    setUniformValue(programID, "LineColor", glm::fvec4(0.05f, 0.0f, 0.05f, 1.0f));
 }
 
 void setupGaussianBlurUniforms(GLuint programID)
