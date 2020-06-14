@@ -168,11 +168,11 @@
     <None Include="..\Shaders\Silhouettes.vert" />
     <None Include="..\Shaders\SilhouettesGaussianBlur.frag" />
     <None Include="..\Shaders\SilhouettesGaussianBlur.vert" />
+    <None Include="..\Shaders\SilhouettesGeometry.frag" />
+    <None Include="..\Shaders\SilhouettesGeometry.geom" />
+    <None Include="..\Shaders\SilhouettesGeometry.vert" />
     <None Include="..\Shaders\simpleShader.frag" />
     <None Include="..\Shaders\simpleShader.vert" />
-    <None Include="SilhouettesGeometry.frag" />
-    <None Include="SilhouettesGeometry.geom" />
-    <None Include="SilhouettesGeometry.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
