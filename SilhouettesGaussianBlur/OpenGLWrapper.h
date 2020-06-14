@@ -51,10 +51,10 @@ GLuint buildProgram(const std::string name);
 
 void setUniformValue(GLuint &prog, const char *name, glm::vec1 value);
 void setUniformValue(GLuint &prog, const char *name, glm::ivec1 value);
-void setUniformValue(GLuint &prog, const char *name, glm::vec2 &value);
-void setUniformValue(GLuint &prog, const char *name, glm::ivec2 &value);
-void setUniformValue(GLuint &prog, const char *name, glm::vec3 &value);
-void setUniformValue(GLuint &prog, const char *name, glm::ivec3 &value);
-void setUniformValue(GLuint &prog, const char *name, glm::vec4 &value);
-void setUniformValue(GLuint &prog, const char *name, glm::ivec4 &value);
-void setUniformValue(GLuint &prog, const char *name, glm::mat4 &value);
+void setUniformValue(GLuint &prog, const char *name, glm::vec2 value);
+void setUniformValue(GLuint &prog, const char *name, glm::ivec2 value);
+void setUniformValue(GLuint &prog, const char *name, glm::vec3 value);
+void setUniformValue(GLuint &prog, const char *name, glm::ivec3 value);
+void setUniformValue(GLuint &prog, const char *name, glm::vec4 value);
+void setUniformValue(GLuint &prog, const char *name, glm::ivec4 value);
+void setUniformValue(GLuint &prog, const char *name, glm::mat4 value);

@@ -514,7 +514,7 @@ GLint compileShader(const GLint shaderType, const std::string *shaderSource)
     return shaderID;
 }
 
-void setUniformValue(GLuint &prog, const char *name, glm::vec1 value)
+void setUniformValue(GLuint &prog, const char *name, glm::fvec1 value)
 {
     auto uniform = glGetUniformLocation(prog, name);
     glUniform1fv(uniform, 1, &value.x);
@@ -524,27 +524,27 @@ void setUniformValue(GLuint &prog, const char *name, glm::ivec1 value)
     auto uniform = glGetUniformLocation(prog, name);
     glUniform1iv(uniform, 1, &value.x);
 }
-void setUniformValue(GLuint &prog, const char *name, glm::vec2 &value)
+void setUniformValue(GLuint &prog, const char *name, glm::fvec2 value)
 {
     auto uniform = glGetUniformLocation(prog, name);
     glUniform2fv(uniform, 1, &value.x);
 }
-void setUniformValue(GLuint &prog, const char *name, glm::ivec2 &value)
+void setUniformValue(GLuint &prog, const char *name, glm::ivec2 value)
 {
     auto uniform = glGetUniformLocation(prog, name);
     glUniform2iv(uniform, 1, &value.x);
 }
-void setUniformValue(GLuint &prog, const char *name, glm::vec3 &value)
+void setUniformValue(GLuint &prog, const char *name, glm::fvec3 value)
 {
     auto uniform = glGetUniformLocation(prog, name);
     glUniform3fv(uniform, 1, &value.x);
 }
-void setUniformValue(GLuint &prog, const char *name, glm::ivec3 &value)
+void setUniformValue(GLuint &prog, const char *name, glm::ivec3 value)
 {
     auto uniform = glGetUniformLocation(prog, name);
     glUniform3iv(uniform, 1, &value.x);
 }
-void setUniformValue(GLuint &prog, const char *name, glm::vec4 value)
+void setUniformValue(GLuint &prog, const char *name, glm::fvec4 value)
 {
     auto uniform = glGetUniformLocation(prog, name);
     glUniform4fv(uniform, 1, &value.x);
@@ -555,7 +555,7 @@ void setUniformValue(GLuint &prog, const char *name, glm::ivec4 value)
     glUniform4iv(uniform, 1, &value.x);
 }
 
-void setUniformValue(GLuint &prog, const char *name, glm::mat4 &value)
+void setUniformValue(GLuint &prog, const char *name, glm::mat4 value)
 {
     auto uniform = glGetUniformLocation(prog, name);
     glUniformMatrix4fv(uniform, 1, GL_FALSE, &value[0][0]);
