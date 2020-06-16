@@ -19,7 +19,6 @@ void mouse_btn_callBack(GLFWwindow* window, int btn, int action, int mods);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-// camera
 Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
 
 double lastX = SCR_WIDTH / 2.0f;
@@ -86,14 +85,14 @@ int main()
     Materials["ndotv"] = Material(ndotv, 0, 0);
     Materials["SilhouettesGeometry"] = Material(silhouettesGeometry, 0, 0);
 
-    RenderObjects["SilhouettesGeometryCow"] = RenderObject(cow);
+    RenderObjects["Cow"] = RenderObject(cow);
     {
-        auto transform = RenderObjects["SilhouettesGeometryCow"].getTransform();
+        auto transform = RenderObjects["Cow"].getTransform();
         transform->setTransform(glm::vec3(0.0f, 0.0f, -5.0f));
         transform->setRotate(glm::vec3(0.0f, 180.0f, 0.0f));
     }
     {
-        RenderObjects["SilhouettesGeometryCow"].setMaterial(&Materials["SilhouettesGeometry"]);
+        RenderObjects["Cow"].setMaterial(&Materials["SilhouettesGeometry"]);
 
         glUseProgram(Materials["SilhouettesGeometry"].getProgramID());
 
@@ -117,13 +116,13 @@ int main()
         {
             if (HowToRender == 1)
             {
-                RenderObjects["SilhouettesGeometryCow"].setMaterial(&Materials["ndotv"]);
-                RenderObjects["SilhouettesGeometryCow"].ndotvRender(camera);
+                RenderObjects["Cow"].setMaterial(&Materials["ndotv"]);
+                RenderObjects["Cow"].ndotvRender(camera);
             }
             else if (HowToRender == 2)
             {
-                RenderObjects["SilhouettesGeometryCow"].setMaterial(&Materials["SilhouettesGeometry"]);
-                RenderObjects["SilhouettesGeometryCow"].silhouetteGeometryRender(camera);
+                RenderObjects["Cow"].setMaterial(&Materials["SilhouettesGeometry"]);
+                RenderObjects["Cow"].silhouetteGeometryRender(camera);
             }
         }
 
