@@ -107,7 +107,9 @@ void drawMesh(Mesh &mesh)
     glBindVertexArray(mesh.getVAO());
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getEBO());
+
     glDrawElements(GL_TRIANGLES, mesh.get_index_count(), GL_UNSIGNED_INT, (void*)0);
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     glBindVertexArray(0);
