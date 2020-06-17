@@ -7,16 +7,14 @@ in vec3 GNormal;
 
 flat in int GIsEdge; // all int need to be flat
 
-layout(location = 0) out vec4 FragColor;
+out vec4 FragColor;
 
 void main()
 {
+    FragColor =  vec4(1.0, 1.0, 1.0, 1.0);
     if(GIsEdge == 1)
     {
         FragColor = LineColor;
     }
-    else
-    {
-        FragColor =  vec4(1.0, 0.0, 0.0, 1.0);
-    }
+
 }

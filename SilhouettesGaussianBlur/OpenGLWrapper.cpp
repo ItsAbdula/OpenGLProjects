@@ -96,15 +96,15 @@ void RenderObject::ndotvRender(Camera &camera)
 
     auto viewPos = camera.transform.getTranslate();
 
-    setUniformValue(prog, "viewPos", viewPos);
+    setUniformValue(prog, "ViewPos", viewPos);
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
     glm::mat4 view = camera.GetViewMatrix();
     glm::mat4 model = transform.getModelMatrix();
 
-    setUniformValue(prog, "projection", projection);
-    setUniformValue(prog, "view", view);
-    setUniformValue(prog, "model", model);
+    setUniformValue(prog, "ProjectionMatrix", projection);
+    setUniformValue(prog, "ViewMatrix", view);
+    setUniformValue(prog, "ModelMatrix", model);
 
     {
         glActiveTexture(GL_TEXTURE0);
@@ -160,17 +160,29 @@ void RenderObject::silhouetteGeometryRender(Camera &camera)
     auto prog = material->getProgramID();
     glUseProgram(prog);
 
-    auto viewPos = camera.transform.getTranslate();
-
-    setUniformValue(prog, "viewPos", viewPos);
-
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
     glm::mat4 view = camera.GetViewMatrix();
     glm::mat4 model = transform.getModelMatrix();
+    auto viewPos = camera.transform.getTranslate();
 
-    setUniformValue(prog, "projection", projection);
-    setUniformValue(prog, "view", view);
-    setUniformValue(prog, "model", model);
+    setUniformValue(prog, "ViewPos", viewPos);
+
+    glm::mat4 mv = view * model;
+    setUniformValue(prog, "ModelMatrix", model);
+    setUniformValue(prog, "ModelViewMatrix", mv);
+    setUniformValue(prog, "NormalMatrix", glm::mat3(glm::vec3(mv[0]), glm::vec3(mv[1]), glm::vec3(mv[2])));
+    setUniformValue(prog, "ProjectionMatrix", projection);
+    setUniformValue(prog, "MVP", projection * mv);
+
+    {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, material->getDiffuseMapID());
+    }
+
+    {
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, material->getSpecularMapID());
+    }
 
     drawMesh(mesh);
 
@@ -287,9 +299,10 @@ void setupFBO()
 
 void setupSilhouettesGeometry(GLuint programID)
 {
-    setUniformValue(programID, "EdgeWidth", glm::fvec1(0.015f));
-    setUniformValue(programID, "PctExtend", glm::fvec1(0.25f));
-    setUniformValue(programID, "LineColor", glm::fvec4(0.05f, 0.0f, 0.05f, 1.0f));
+    setUniformValue(programID, "EdgeWidth", glm::fvec1(0.01f));
+    setUniformValue(programID, "PctExtend", glm::fvec1(0.1f));
+    setUniformValue(programID, "LineColor", glm::fvec4(0.0f, 0.0f, 0.0f, 1.0f));
+    setUniformValue(programID, "Threshold", glm::fvec1(0.01f));
 }
 
 void setupGaussianBlurUniforms(GLuint programID)
@@ -321,7 +334,7 @@ void RenderObject::silhouetteGaussianBlurRender(Camera &camera)
     auto prog = material->getProgramID();
     glUseProgram(prog);
 
-    ////pass1
+    //pass1
     setUniformValue(prog, "Pass", glm::ivec1(1));
 
     glBindFramebuffer(GL_FRAMEBUFFER, renderFBO);
@@ -470,14 +483,24 @@ GLuint buildProgram(const std::string name)
     auto shaderIDs = compileShaders(shaderSources);
 
     auto programID = glCreateProgram();
-    for (const auto &i : shaderIDs)
+    for (const auto &id : shaderIDs)
     {
-        glAttachShader(programID, i);
+        glAttachShader(programID, id);
     }
+
     glLinkProgram(programID);
-    for (const auto &i : shaderIDs)
+    GLint success;
+    glGetProgramiv(programID, GL_LINK_STATUS, &success);
+    if (!success)
     {
-        glDeleteShader(i);
+        GLchar infoLog[512];
+        glGetProgramInfoLog(programID, 512, NULL, infoLog);
+        std::cerr << infoLog << "SHADER::LINK::ERROR" << std::endl;
+    }
+
+    for (const auto &id : shaderIDs)
+    {
+        glDeleteShader(id);
     }
 
     return programID;
@@ -572,6 +595,12 @@ void setUniformValue(GLuint &prog, const char *name, glm::ivec4 value)
 {
     auto uniform = glGetUniformLocation(prog, name);
     glUniform4iv(uniform, 1, &value.x);
+}
+
+void setUniformValue(GLuint &prog, const char *name, glm::mat3 value)
+{
+    auto uniform = glGetUniformLocation(prog, name);
+    glUniformMatrix4fv(uniform, 1, GL_FALSE, &value[0][0]);
 }
 
 void setUniformValue(GLuint &prog, const char *name, glm::mat4 value)

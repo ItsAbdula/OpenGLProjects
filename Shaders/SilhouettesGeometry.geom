@@ -1,7 +1,7 @@
 ﻿#version 420
 
 // layout(INPUT_PRIMITIVE) in;
-layout(triangles_adjacency) in;
+layout(triangles) in;
 
 // layout(OUTPUT_PRIMITIVE​, max_vertices = VERTEX_COUNT​) out;
 layout(triangle_strip, max_vertices = 15) out;
@@ -9,19 +9,22 @@ layout(triangle_strip, max_vertices = 15) out;
 out vec3 GPosition;
 out vec3 GNormal;
 
-// Which triangle edges are silhouette edges
 flat out int GIsEdge; // all int need to be flat
 
-in vec3 VNormal[];
-in vec3 VPosition[];
+in float VNdotv[];
 
 uniform float EdgeWidth;
 uniform float PctExtend;
+uniform float Threshold;
 
-bool isFrontFacing(vec3 a, vec3 b, vec3 c)
+float inverseLerp(float a, float b)
 {
-    return ((a.x * b.y - b.x * a.y) + (b.x * c.y - c.x * b.y) + (c.x * a.y - a.x * c.y))
-            > 0;
+    return -b / (a - b);
+}
+
+vec3 interpolation(vec3 begin, vec3 end, float ndotvBegin, float ndotvEnd)
+{
+    return mix(begin, end, inverseLerp(ndotvBegin, ndotvEnd));
 }
 
 void emitEdgeQuad(vec3 e0, vec3 e1)
@@ -47,43 +50,62 @@ void emitEdgeQuad(vec3 e0, vec3 e1)
     EndPrimitive();
 }
 
+void drawSilhouettes(vec3 vertices[3])
+{
+    vec3 pos1;
+    vec3 pos2;
+
+    if(VNdotv[0] < Threshold || VNdotv[1] < Threshold || VNdotv[2] < Threshold)
+    {
+        emitEdgeQuad(vertices[0], vertices[1]);
+        emitEdgeQuad(vertices[1], vertices[2]);
+        emitEdgeQuad(vertices[0], vertices[2]);
+    }
+
+    if(VNdotv[0] * VNdotv[1] < 0 && VNdotv[0] * VNdotv[2] < 0)
+    {
+        pos1 = interpolation(vertices[0], vertices[1], VNdotv[0], VNdotv[1]);
+        pos2 = interpolation(vertices[0], vertices[2], VNdotv[0], VNdotv[2]);
+
+        emitEdgeQuad(pos1, pos2);
+    }
+    else if(VNdotv[1] * VNdotv[0] < 0 && VNdotv[1] * VNdotv[2] < 0)
+    {
+        pos1 = interpolation(vertices[1], vertices[0], VNdotv[1], VNdotv[0]);
+        pos2 = interpolation(vertices[1], vertices[2], VNdotv[1], VNdotv[2]);
+
+        emitEdgeQuad(pos1, pos2);
+    }
+    else if(VNdotv[2] * VNdotv[0] < 0 && VNdotv[2] * VNdotv[1] < 0)
+    {
+        pos1 = interpolation(vertices[2], vertices[0], VNdotv[2], VNdotv[0]);
+        pos2 = interpolation(vertices[2], vertices[1], VNdotv[2], VNdotv[1]);
+
+        emitEdgeQuad(pos1, pos2);
+    }
+}
+
+
 void main()
 {
-    vec3 vertices[6];
-    for(int i = 0; i < 6; i++)
+    vec3 vertices[3];
+    for(int i = 0; i < 3; i++)
     {
         vertices[i] = gl_in[i].gl_Position.xyz / gl_in[i].gl_Position.w;
     }
-
-    if(isFrontFacing(vertices[0], vertices[2], vertices[4]))
-    {
-        if(isFrontFacing(vertices[0],vertices[1],vertices[2]) == false)
-            emitEdgeQuad(vertices[0], vertices[2]);
-
-        if(isFrontFacing(vertices[2],vertices[3],vertices[4]) == false)
-            emitEdgeQuad(vertices[2], vertices[4]);
-
-        if(isFrontFacing(vertices[4],vertices[5],vertices[0]) == false)
-            emitEdgeQuad(vertices[4], vertices[0]);
-    }
+    drawSilhouettes(vertices);
 
     // Output the original triangle
 
     GIsEdge = 0;   // This triangle is not part of an edge.
 
-    GNormal = VNormal[0];
-    GPosition = VPosition[0];
     gl_Position = gl_in[0].gl_Position;
     EmitVertex();
 
-    GNormal = VNormal[2];
-    GPosition = VPosition[2];
-    gl_Position = gl_in[2].gl_Position;
+    gl_Position = gl_in[1].gl_Position;
     EmitVertex();
 
-    GNormal = VNormal[4];
-    GPosition = VPosition[4];
-    gl_Position = gl_in[4].gl_Position;
+    gl_Position = gl_in[2].gl_Position;
     EmitVertex();
 
     EndPrimitive();

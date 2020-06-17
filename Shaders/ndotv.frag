@@ -2,14 +2,10 @@
 out vec4 FragColor;
 
 in vec3 FragPos;  
-in vec3 Normal;  
-
-uniform vec3 viewPos;
+in vec3 Normal;
+in float NdotV;
 
 void main()
 {
-	vec3 viewDir = normalize(viewPos - FragPos);
-	float ndotv = dot(normalize(Normal), viewDir);
-
-    FragColor = vec4(ndotv, ndotv, ndotv, 1.0);
+    FragColor = vec4(NdotV, NdotV, NdotV, 1.0);
 } 
