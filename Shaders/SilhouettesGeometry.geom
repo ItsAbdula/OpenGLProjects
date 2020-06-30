@@ -33,7 +33,8 @@ void emitEdgeQuad(vec3 e0, vec3 e1)
     vec2 v = normalize(e1.xy - e0.xy);
     vec2 n = vec2(-v.y, v.x) * EdgeWidth;
 
-    GIsEdge = 1;   // This is part of the sil. edge
+
+    GIsEdge = 1;
 
     gl_Position = vec4(e0.xy - ext, e0.z, 1.0);
     EmitVertex();
@@ -55,12 +56,12 @@ void drawSilhouettes(vec3 vertices[3])
     vec3 pos1;
     vec3 pos2;
 
-    if(VNdotv[0] < Threshold || VNdotv[1] < Threshold || VNdotv[2] < Threshold)
-    {
-        emitEdgeQuad(vertices[0], vertices[1]);
-        emitEdgeQuad(vertices[1], vertices[2]);
-        emitEdgeQuad(vertices[0], vertices[2]);
-    }
+//    if(VNdotv[0] < Threshold || VNdotv[1] < Threshold || VNdotv[2] < Threshold)
+//    {
+//        emitEdgeQuad(vertices[0], vertices[1]);
+//        emitEdgeQuad(vertices[1], vertices[2]);
+//        emitEdgeQuad(vertices[0], vertices[2]);
+//    }
 
     if(VNdotv[0] * VNdotv[1] < 0 && VNdotv[0] * VNdotv[2] < 0)
     {
@@ -95,9 +96,7 @@ void main()
     }
     drawSilhouettes(vertices);
 
-    // Output the original triangle
-
-    GIsEdge = 0;   // This triangle is not part of an edge.
+    GIsEdge = 0;
 
     gl_Position = gl_in[0].gl_Position;
     EmitVertex();

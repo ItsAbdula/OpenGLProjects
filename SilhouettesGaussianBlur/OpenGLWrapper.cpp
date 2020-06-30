@@ -303,6 +303,7 @@ void setupSilhouettesGeometry(GLuint programID)
     setUniformValue(programID, "PctExtend", glm::fvec1(0.1f));
     setUniformValue(programID, "LineColor", glm::fvec4(0.0f, 0.0f, 0.0f, 1.0f));
     setUniformValue(programID, "Threshold", glm::fvec1(0.01f));
+    setUniformValue(programID, "onlySilhouette", glm::ivec1(0));
 }
 
 void setupGaussianBlurUniforms(GLuint programID)

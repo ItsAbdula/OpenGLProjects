@@ -121,6 +121,25 @@ int main()
             }
             else if (HowToRender == 2)
             {
+                glUseProgram(Materials["SilhouettesGeometry"].getProgramID());
+
+                auto progID = Materials["SilhouettesGeometry"].getProgramID();
+                setUniformValue(progID, "onlySilhouette", glm::ivec1(0));
+
+                glUseProgram(0);
+
+                RenderObjects["Cow"].setMaterial(&Materials["SilhouettesGeometry"]);
+                RenderObjects["Cow"].silhouetteGeometryRender(camera);
+            }
+            else if (HowToRender == 3)
+            {
+                glUseProgram(Materials["SilhouettesGeometry"].getProgramID());
+
+                auto progID = Materials["SilhouettesGeometry"].getProgramID();
+                setUniformValue(progID, "onlySilhouette", glm::ivec1(1));
+
+                glUseProgram(0);
+
                 RenderObjects["Cow"].setMaterial(&Materials["SilhouettesGeometry"]);
                 RenderObjects["Cow"].silhouetteGeometryRender(camera);
             }
@@ -159,6 +178,11 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
     {
         HowToRender = 2;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+    {
+        HowToRender = 3;
     }
 }
 
