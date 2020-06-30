@@ -33,19 +33,18 @@ void emitEdgeQuad(vec3 e0, vec3 e1)
     vec2 v = normalize(e1.xy - e0.xy);
     vec2 n = vec2(-v.y, v.x) * EdgeWidth;
 
-
     GIsEdge = 1;
 
-    gl_Position = vec4(e0.xy - ext, e0.z, 1.0);
+    gl_Position = vec4(e0.xy - ext - n, e0.z, 1.0);
     EmitVertex();
 
-    gl_Position = vec4(e0.xy - n - ext, e0.z, 1.0);
+    gl_Position = vec4(e0.xy - ext + n, e0.z, 1.0);
     EmitVertex();
 
-    gl_Position = vec4(e1.xy + ext, e1.z, 1.0);
+    gl_Position = vec4(e1.xy + ext - n, e1.z, 1.0);
     EmitVertex();
 
-    gl_Position = vec4(e1.xy - n + ext, e1.z, 1.0);
+    gl_Position = vec4(e1.xy + ext + n, e1.z, 1.0);
     EmitVertex();
 
     EndPrimitive();
