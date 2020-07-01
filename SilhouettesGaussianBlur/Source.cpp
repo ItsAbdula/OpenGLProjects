@@ -78,7 +78,6 @@ int main()
 
     auto cow = Mesh(ResourceManager::getInstance().loadModelFromPath(filePath));
 
-    auto lightmap = buildProgram("Lighting_Maps");
     auto ndotv = buildProgram("ndotv");
     auto silhouettesGeometry = buildProgram("SilhouettesGeometry");
 

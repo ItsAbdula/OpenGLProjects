@@ -138,8 +138,6 @@ void RenderObject::silhouetteRender(Camera &camera)
     setUniformValue(prog, "view", view);
     setUniformValue(prog, "model", model);
 
-    setUniformValue(prog, "threshold", glm::fvec1(0.3f));
-
     {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, material->getDiffuseMapID());
@@ -302,7 +300,6 @@ void setupSilhouettesGeometry(GLuint programID)
     setUniformValue(programID, "EdgeWidth", glm::fvec1(0.01f));
     setUniformValue(programID, "PctExtend", glm::fvec1(0.1f));
     setUniformValue(programID, "LineColor", glm::fvec4(0.0f, 0.0f, 0.0f, 1.0f));
-    setUniformValue(programID, "Threshold", glm::fvec1(0.01f));
     setUniformValue(programID, "onlySilhouette", glm::ivec1(0));
 }
 
@@ -352,8 +349,6 @@ void RenderObject::silhouetteGaussianBlurRender(Camera &camera)
     setUniformValue(prog, "projection", projection);
     setUniformValue(prog, "view", view);
     setUniformValue(prog, "model", model);
-
-    setUniformValue(prog, "threshold", glm::fvec1(0.3f));
 
     drawMesh(mesh);
 

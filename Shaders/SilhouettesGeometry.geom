@@ -15,7 +15,6 @@ in float VNdotv[];
 
 uniform float EdgeWidth;
 uniform float PctExtend;
-uniform float Threshold;
 
 float inverseLerp(float a, float b)
 {
@@ -54,13 +53,6 @@ void drawSilhouettes(vec3 vertices[3])
 {
     vec3 pos1;
     vec3 pos2;
-
-//    if(VNdotv[0] < Threshold || VNdotv[1] < Threshold || VNdotv[2] < Threshold)
-//    {
-//        emitEdgeQuad(vertices[0], vertices[1]);
-//        emitEdgeQuad(vertices[1], vertices[2]);
-//        emitEdgeQuad(vertices[0], vertices[2]);
-//    }
 
     if(VNdotv[0] * VNdotv[1] < 0 && VNdotv[0] * VNdotv[2] < 0)
     {
