@@ -1,8 +1,8 @@
 # OpenGLProjects
 
-**Usage : **
-..\Resources\Models\spot_triangulated.obj
-..\Resources\Models\octahedron.obj
+**Usage :**  
+..\Resources\Models\spot_triangulated.obj  
+..\Resources\Models\octahedron.obj  
 
 **Development Environment :**  
  Windows 10(64-bit)  
@@ -11,6 +11,7 @@
  GLAD    
  GLFW  
  glm  
+ ASSIMP  
 
 **References :**  
 learnopengl.com  
