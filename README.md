@@ -1,5 +1,9 @@
 # OpenGLProjects
 
+**Usage : **
+..\Resources\Models\spot_triangulated.obj
+..\Resources\Models\octahedron.obj
+
 **Development Environment :**  
  Windows 10(64-bit)  
  Visual Studio 2017  
